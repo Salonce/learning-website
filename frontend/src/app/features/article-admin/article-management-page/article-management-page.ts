@@ -5,11 +5,11 @@ import { Article } from '../../../core/models/article';
 import { Page } from '../../../core/models/page';
 import { AsyncPipe } from '@angular/common';
 import { Pagination } from '../../../shared/pagination/pagination';
-import { ArticleEditList } from '../article-edit-list/article-edit-list';
+import { ArticleAdminList } from '../article-admin-list/article-admin-list';
 
 @Component({
   selector: 'app-article-management-page',
-  imports: [AsyncPipe, Pagination, ArticleEditList],
+  imports: [AsyncPipe, Pagination, ArticleAdminList],
   templateUrl: './article-management-page.html',
   styleUrl: './article-management-page.css'
 })

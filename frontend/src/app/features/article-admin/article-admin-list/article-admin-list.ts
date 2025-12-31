@@ -6,12 +6,12 @@ import { RouterModule } from '@angular/router';
 import { ArticleService } from '../../../core/article-service/article-service';
 
 @Component({
-  selector: 'app-article-edit-list',
+  selector: 'app-article-admin-list',
   imports: [CommonModule, RouterModule],
-  templateUrl: './article-edit-list.html',
-  styleUrl: './article-edit-list.css'
+  templateUrl: './article-admin-list.html',
+  styleUrl: './article-admin-list.css'
 })
-export class ArticleEditList {
+export class ArticleAdminList {
   constructor(private sanitizer: DomSanitizer, private articleService: ArticleService){}
 
   @Input() articles : Article[] = [];

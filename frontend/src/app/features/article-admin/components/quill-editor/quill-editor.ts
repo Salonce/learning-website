@@ -19,7 +19,6 @@ export class QuillEditor {
   }
 
   editorModules = {
-    syntax: true,
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
       ['blockquote', 'code-block'],

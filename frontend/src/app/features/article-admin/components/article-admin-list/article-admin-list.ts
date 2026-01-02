@@ -32,17 +32,14 @@ export class ArticleAdminList {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  // Show confirmation dialog
   confirmDelete(id: number) {
     this.articleToDelete.set(id);
   }
 
-  // Cancel deletion
   cancelDelete() {
     this.articleToDelete.set(null);
   }
 
-  // Actually delete the article
   deleteArticle(id: number) {
     this.articleService.deleteArticle(id).subscribe({
       next: () => {

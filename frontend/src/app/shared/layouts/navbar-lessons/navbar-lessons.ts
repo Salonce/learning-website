@@ -6,13 +6,12 @@ import { RouterModule } from '@angular/router';
 import { Principal } from '../../../core/models/principal';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-navbar-lessons',
   imports: [CommonModule, RouterModule],
-  templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  templateUrl: './navbar-lessons.html',
+  styleUrl: './navbar-lessons.css'
 })
-export class Navbar {
-
+export class NavbarLessons {
   isOpen = false;
   
   principal$: Observable<Principal | null>;

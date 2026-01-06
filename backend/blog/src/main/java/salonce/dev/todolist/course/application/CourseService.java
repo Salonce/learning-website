@@ -1,0 +1,80 @@
+package salonce.dev.todolist.course.application;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import salonce.dev.todolist.account.application.AccountService;
+import salonce.dev.todolist.account.domain.Account;
+import salonce.dev.todolist.account.infrastructure.AccountRepository;
+import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
+import salonce.dev.todolist.article.application.exceptions.ArticleNotFound;
+import salonce.dev.todolist.article.domain.Article;
+import salonce.dev.todolist.course.application.exceptions.CourseNotFound;
+import salonce.dev.todolist.course.domain.Course;
+import salonce.dev.todolist.course.infrastructure.CourseRepository;
+import salonce.dev.todolist.course.presentation.CourseMapper;
+import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
+import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
+import salonce.dev.todolist.task.application.exceptions.AccountNotFound;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@Service
+public class CourseService {
+
+    private final AccountService accountService;
+    private final CourseRepository courseRepository;
+
+    @Transactional
+    public List<CourseViewResponse> getAllCourses(){
+        return courseRepository.findAll().stream().map(CourseMapper::toCourseViewResponse).toList();
+    }
+
+    @Transactional
+    public CourseViewResponse getCourse(Long id){
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
+        return CourseMapper.toCourseViewResponse(course);
+    }
+
+    @Transactional
+    public CourseViewResponse getCourse(String slug){
+        Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
+        return CourseMapper.toCourseViewResponse(course);
+    }
+
+    @Transactional
+    public CourseViewResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
+        Account account = accountService.findAccount(principal.id());
+        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextOrderIndex());
+        return CourseMapper.toCourseViewResponse(courseRepository.save(course));
+    }
+
+    @Transactional
+    public void deleteCourse(AccountPrincipal principal, Long courseId){
+        Account account = accountService.findAccount(principal.id());
+        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        Course course = courseRepository.findById(courseId).orElseThrow(ArticleNotFound::new);
+        courseRepository.delete(course);
+    }
+
+    private int getNextOrderIndex() {
+        return courseRepository
+                .findTopByOrderByOrderIndexDesc()
+                .map(course -> course.getOrderIndex() + 1)
+                .orElse(1);
+    }
+
+    private String generateSlug(String name) {
+        return name.toLowerCase()
+                .trim()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-");
+    }
+}

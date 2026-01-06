@@ -1,2 +1,15 @@
 <app-navbar></app-navbar>
-<router-outlet/>
+<app-navbar-courses></app-navbar-courses>
+
+<!-- Flex container for sidebar + content -->
+<div class="flex w-full mt-6 px-4 sm:px-6 lg:px-8 gap-8">
+
+  <!-- Sidebar -->
+  <app-navbar-lessons class="w-64"></app-navbar-lessons>
+
+  <!-- Main content -->
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

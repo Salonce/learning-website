@@ -1,0 +1,52 @@
+<!-- SIDE NAVBAR WRAPPER -->
+<aside class="hidden md:block w-64 sticky top-32 h-[calc(100vh-8rem)] overflow-y-auto pr-4">
+  <nav class="flex flex-col space-y-3 bg-white shadow-lg rounded-xl p-2">
+
+    <!-- Section title -->
+    <h2 class="text-xl font-bold text-gray-900 mb-3 px-3">Brain</h2>
+
+    <!-- Links -->
+    <a [routerLink]="['/courses/brain/anatomy']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Brain Anatomy
+    </a>
+
+    <a [routerLink]="['/courses/brain/neurons']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Neurons & Neurotransmitters
+    </a>
+
+    <a [routerLink]="['/courses/brain/plasticity']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Brain Plasticity
+    </a>
+
+    <a [routerLink]="['/courses/brain/imaging']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Brain Imaging Techniques
+    </a>
+
+    <a [routerLink]="['/courses/brain/cognition']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Cognition & Functions
+    </a>
+
+    <a [routerLink]="['/courses/brain/disorders']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Brain Disorders
+    </a>
+
+    <a [routerLink]="['/courses/brain/research']"
+       routerLinkActive="bg-amber-600 text-white shadow-md"
+       class="px-4 py-3 rounded-full text-gray-800 font-semibold hover:bg-amber-100 hover:text-amber-700 transition-all whitespace-nowrap">
+      Current Research
+    </a>
+
+  </nav>
+</aside>

@@ -10,6 +10,7 @@ import { ArticlePage } from './features/article-browse/pages/article-page/articl
 import { DashboardOverview } from './features/dashboard-overview/dashboard-overview';
 import { ArticleEditPage } from './features/article-admin/pages/article-edit-page/article-edit-page';
 import { ArticleAdminListPage } from './features/article-admin/pages/article-admin-list-page/article-admin-list-page';
+import { AdminCourse } from './features/admin-course/admin-course';
 
 export const routes: Routes = [
     {
@@ -38,6 +39,7 @@ export const routes: Routes = [
             { path: 'dashboard/create-article', component: ArticleNewPage },
             { path: 'dashboard/article-management', component: ArticleAdminListPage },
             { path: 'dashboard/articles/:id/edit', component: ArticleEditPage },
+            { path: 'dashboard/courses-management', component: AdminCourse }
         ]
     },
     {

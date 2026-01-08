@@ -3,10 +3,6 @@ package salonce.dev.todolist.course.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import salonce.dev.todolist.account.domain.Identities;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity

@@ -15,7 +15,6 @@ export class ArticleService {
   constructor(private http : HttpClient) {}
 
       private readonly apiUrl = environment.apiUrl;
-      private accountUrl = this.apiUrl + '/account';
 
   getArticles(page: number = 0, size: number = 10): Observable<Page<Article>> {
     const params = new HttpParams()

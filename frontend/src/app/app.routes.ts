@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './shared/layouts/main-layout/main-layout';
-import { HomePage } from './features/article-browse/pages/home-page/home-page';
+import { HomePage } from './features/article/pages/home-page/home-page';
 import { AuthLayout } from './shared/layouts/auth-layout/auth-layout';
-import { AccountDetailsPage } from './features/settings/account-details-page/account-details-page';
-import { AccountEditPage } from './features/settings/pages/account-edit-page/account-edit-page';
+import { AccountDetailsPage } from './features/account/pages/account-details-page/account-details-page';
+import { AccountEditPage } from './features/account/pages/account-edit-page/account-edit-page';
 import { DashboardLayout } from './shared/layouts/dashboard-layout/dashboard-layout';
-import { ArticleNewPage } from './features/article-admin/pages/article-new-page/article-new-page';
-import { ArticlePage } from './features/article-browse/pages/article-page/article-page';
-import { DashboardOverview } from './features/dashboard-overview/dashboard-overview';
-import { ArticleEditPage } from './features/article-admin/pages/article-edit-page/article-edit-page';
-import { ArticleAdminListPage } from './features/article-admin/pages/article-admin-list-page/article-admin-list-page';
-import { AdminCourse } from './features/admin-course/admin-course';
+import { ArticleNewPage } from './features/article/pages/article-new-page/article-new-page';
+import { ArticlePage } from './features/article/pages/article-page/article-page';
+import { DashboardOverview } from './features/statistics/pages/dashboard-overview/dashboard-overview';
+import { ArticleEditPage } from './features/article/pages/article-edit-page/article-edit-page';
+import { ArticleAdminListPage } from './features/article/pages/article-admin-list-page/article-admin-list-page';
+import { AdminCourse } from './features/course/pages/admin-course/admin-course';
 
 export const routes: Routes = [
     {

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from '../navbar/navbar';
-import { NavbarCourses } from "../navbar-courses/navbar-courses";
-import { NavbarLessons } from "../navbar-lessons/navbar-lessons";
+import { Navbar } from '../../components/navbar/navbar';
+import { NavbarCourses } from "../../components/navbar-courses/navbar-courses";
+import { NavbarLessons } from "../../components/navbar-lessons/navbar-lessons";
 
 @Component({
   selector: 'app-main-layout',

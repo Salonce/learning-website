@@ -4,7 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { NewArticle } from '../models/new-article';
 import { Page } from '../../../shared/models/page';
 import { Article } from '../models/article';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

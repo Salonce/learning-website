@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../core/auth/auth-service/auth-service';
+import { AuthService } from '../../../../core/auth-service/auth-service';
 import { Observable } from 'rxjs/internal/Observable';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Principal } from '../../../core/models/principal';
+import { Principal } from '../../../../core/models/principal';
 
 @Component({
   selector: 'app-navbar-courses',

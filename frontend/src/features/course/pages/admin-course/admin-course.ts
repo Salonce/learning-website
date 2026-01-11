@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { CourseMetadata } from '../../models/course-metadata';
-import { ServiceCourse } from '../../services/service-course/service-course';
+import { CourseService } from '../../services/service-course/course-service';
 import { NewCourse } from '../../models/new-course';
 
 @Component({
@@ -22,7 +22,7 @@ export class AdminCourse implements OnInit{
   newCourseName = signal('');
   isSubmitting = signal(false);
 
-  constructor(private courseService: ServiceCourse) {}
+  constructor(private courseService: CourseService) {}
 
   ngOnInit() {
     this.loadCourses();

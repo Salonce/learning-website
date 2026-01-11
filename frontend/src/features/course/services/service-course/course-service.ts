@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { CourseMetadata } from '../../models/course-metadata';
@@ -8,8 +8,7 @@ import { NewCourse } from '../../models/new-course';
 @Injectable({
   providedIn: 'root'
 })
-export class ServiceCourse {
-  
+export class CourseService {
   constructor(private http : HttpClient) {}
 
   private readonly apiUrl = environment.apiUrl;

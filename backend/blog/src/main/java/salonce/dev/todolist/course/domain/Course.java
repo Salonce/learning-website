@@ -15,6 +15,7 @@ public class Course {
     private String name;
     private String slug;
     private Integer orderIndex;
+    private Boolean published;
 
     protected Course() {}
 
@@ -22,6 +23,7 @@ public class Course {
         this.name = name;
         this.slug = slug;
         this.orderIndex = orderIndex;
+        this.published = false;
     }
 
     @Setter

@@ -1,7 +1,5 @@
 package salonce.dev.todolist.course.presentation;
 
-import salonce.dev.todolist.article.domain.Article;
-import salonce.dev.todolist.article.presentation.dtos.ArticleViewResponse;
 import salonce.dev.todolist.course.domain.Course;
 import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
 

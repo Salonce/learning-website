@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { CourseMetadata } from '../../models/course-metadata';
-import { CourseService } from '../../services/service-course/course-service';
+import { CourseService } from '../../services/course-service/course-service';
 import { NewCourse } from '../../models/new-course';
 
 @Component({

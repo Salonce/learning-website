@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Principal } from '../../../../core/models/principal';
-import { CourseService } from '../../services/service-course/course-service';
+import { CourseService } from '../../services/course-service/course-service';
 import { CourseMetadata } from '../../models/course-metadata';
 
 @Component({

@@ -13,6 +13,8 @@ public class Lesson {
 
     private String title;
 
+    private String slug;
+
     private int orderIndex;
 
     @ManyToOne(fetch = FetchType.LAZY)

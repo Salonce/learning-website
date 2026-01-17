@@ -13,6 +13,8 @@ export class CourseService {
 
   private readonly apiUrl = environment.apiUrl;
 
+
+
   getCourses(): Observable<CourseMetadata[]>{
     return this.http.get<CourseMetadata[]>(this.apiUrl + '/courses', {
       withCredentials: true

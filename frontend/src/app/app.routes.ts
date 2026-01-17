@@ -40,7 +40,8 @@ export const routes: Routes = [
             { path: 'dashboard/create-article', component: ArticleNewPage },
             { path: 'dashboard/article-management', component: ArticleAdminListPage },
             { path: 'dashboard/articles/:id/edit', component: ArticleEditPage },
-            { path: 'dashboard/courses-management', component: AdminCourse }
+            { path: 'dashboard/courses-management', component: AdminCourse },
+            { path: 'courses/:id/lessons', component: AdminCourse } 
         ]
     }
 ];

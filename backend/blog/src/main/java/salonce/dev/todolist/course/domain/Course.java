@@ -29,4 +29,12 @@ public class Course {
     @Setter
     @Embedded
     private Lessons lessons = new Lessons();
+
+    public void addLesson(Lesson lesson) {
+        lessons.addLesson(lesson, this);
+    }
+
+    public void removeLesson(Lesson lesson) {
+        lessons.removeLesson(lesson);
+    }
 }

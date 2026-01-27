@@ -6,8 +6,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.application.CourseService;
+import salonce.dev.todolist.course.application.LessonService;
 import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
 import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
+import salonce.dev.todolist.course.presentation.dtos.LessonViewResponse;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class CourseController {
 
     private final CourseService courseService;
+    private final LessonService lessonService;
 
     @GetMapping("/api/courses")
     public ResponseEntity<List<CourseViewResponse>> getAllCourseViewResponses(){
@@ -24,13 +28,19 @@ public class CourseController {
 
     @GetMapping("/api/courses/{id}")
     public ResponseEntity<CourseViewResponse> getCourseById(@PathVariable Long id){
-        return ResponseEntity.ok(courseService.getCourseById(id));
+        return ResponseEntity.ok(courseService.getCourseViewById(id));
     }
 
     @GetMapping("/api/courses/{slug}")
     public ResponseEntity<CourseViewResponse> getCourseViewResponse(@PathVariable String slug){
         return ResponseEntity.ok(courseService.getCourseBySlug(slug));
     }
+
+    @PostMapping("/api/courses/{courseId}/lessons")
+    public ResponseEntity<LessonViewResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
+        return ResponseEntity.ok(lessonService.saveLesson(principal, courseId, lessonCreateRequest));
+    }
+
 
 //    @PatchMapping("/api/articles/{id}")
 //    public ResponseEntity<CourseViewResponse> PatchCourse(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody CourseCreateRequest articleCreateRequest, @PathVariable Long id){

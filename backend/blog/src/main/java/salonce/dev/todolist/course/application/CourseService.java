@@ -30,7 +30,12 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseViewResponse getCourseById(Long id){
+    public Course getCourseById(Long id){
+        return courseRepository.findById(id).orElseThrow(CourseNotFound::new);
+    }
+
+    @Transactional
+    public CourseViewResponse getCourseViewById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseViewResponse(course);
     }

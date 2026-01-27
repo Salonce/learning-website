@@ -17,4 +17,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT c FROM Course c")
     @EntityGraph(attributePaths = {"lessons"})
     List<Course> findAllWithLessons();
+
 }

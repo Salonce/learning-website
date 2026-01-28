@@ -31,16 +31,10 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseViewById(id));
     }
 
-    @GetMapping("/api/courses/{slug}")
+    @GetMapping("/api/courses/slug/{slug}")
     public ResponseEntity<CourseViewResponse> getCourseViewResponse(@PathVariable String slug){
         return ResponseEntity.ok(courseService.getCourseBySlug(slug));
     }
-
-    @PostMapping("/api/courses/{courseId}/lessons")
-    public ResponseEntity<LessonViewResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
-        return ResponseEntity.ok(lessonService.saveLesson(principal, courseId, lessonCreateRequest));
-    }
-
 
 //    @PatchMapping("/api/articles/{id}")
 //    public ResponseEntity<CourseViewResponse> PatchCourse(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody CourseCreateRequest articleCreateRequest, @PathVariable Long id){
@@ -58,4 +52,8 @@ public class CourseController {
         return ResponseEntity.ok(courseService.saveCourse(principal, courseCreateRequest));
     }
 
+    @PostMapping("/api/courses/{courseId}/lessons")
+    public ResponseEntity<LessonViewResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
+        return ResponseEntity.ok(lessonService.saveLesson(principal, courseId, lessonCreateRequest));
+    }
 }

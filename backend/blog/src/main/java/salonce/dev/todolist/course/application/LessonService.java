@@ -28,7 +28,7 @@ public class LessonService {
         if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
         Course course = courseService.getCourseById(courseId);
-        Lesson lesson = new Lesson(lessonCreateRequest.name(), nextOrderIndex);
+        Lesson lesson = new Lesson(lessonCreateRequest.title(), nextOrderIndex);
         course.addLesson(lesson);
         return LessonMapper.toLessonViewResponse(lessonRepository.save(lesson));
     }

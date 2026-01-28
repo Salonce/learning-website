@@ -15,7 +15,7 @@ export class CourseService {
 
 
   getCourseById(id: number): Observable<CourseMetadata>{
-    return this.http.get<CourseMetadata>(this.apiUrl + '/courses/${id}', {
+    return this.http.get<CourseMetadata>(`${this.apiUrl}/courses/${id}`, {
       withCredentials: true
     }).pipe(
       catchError(err => {
@@ -26,7 +26,7 @@ export class CourseService {
   }
 
   getCourses(): Observable<CourseMetadata[]>{
-    return this.http.get<CourseMetadata[]>(this.apiUrl + '/courses', {
+    return this.http.get<CourseMetadata[]>(`${this.apiUrl}/courses`, {
       withCredentials: true
     }).pipe(
       catchError(err => {
@@ -42,7 +42,7 @@ export class CourseService {
 
 
   postCourse(course: NewCourse) : Observable<NewCourse> {
-    return this.http.post<NewCourse>(this.apiUrl + `/courses`, course, {withCredentials : true}).pipe(
+    return this.http.post<NewCourse>(`${this.apiUrl}/courses`, course, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post course', err);
         return throwError(() => new Error('Could not fetch course'));

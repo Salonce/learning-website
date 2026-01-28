@@ -65,13 +65,12 @@ export class CourseLessons {
 
     this.isSubmitting.set(true);
     const newLesson: NewLesson = { 
-      courseId: this.courseId,
-      name: string
+      title
     };
 
-    this.lessonService.createLesson(newLesson).subscribe({
+    this.lessonService.postLesson(this.courseId, newLesson).subscribe({
       next: () => {
-        this.loadLessons();
+        this.loadCourse();
         this.newLessonTitle.set('');
         this.newLessonContent.set('');
         this.showAddForm.set(false);
@@ -95,7 +94,7 @@ export class CourseLessons {
       return;
     }
 
-    this.lessonService.deleteLesson(lessonId).subscribe({
+    this.lessonService.removeLesson(this.courseId, lessonId).subscribe({
       next: () => {
         this.lessons.update(list => list.filter(l => l.id !== lessonId));
       },
@@ -106,25 +105,6 @@ export class CourseLessons {
     });
   }
 
-  moveUp(lessonId: number) {
-    this.lessonService.reorderLesson(lessonId, 'up').subscribe({
-      next: () => this.loadLessons(),
-      error: (err) => {
-        this.error.set('Failed to reorder lesson');
-        console.error(err);
-      }
-    });
-  }
-
-  moveDown(lessonId: number) {
-    this.lessonService.reorderLesson(lessonId, 'down').subscribe({
-      next: () => this.loadLessons(),
-      error: (err) => {
-        this.error.set('Failed to reorder lesson');
-        console.error(err);
-      }
-    });
-  }
 
   backToCourses() {
     this.router.navigate(['/dashboard/courses-management']);

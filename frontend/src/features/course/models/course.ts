@@ -1,9 +1,9 @@
 import { LessonMetadata } from "./lesson-metadata";
 
-export interface CourseMetadata{
+export interface Course{
   id : number;
   name : string;
   slug : string;
   orderId : string;
-  size: number;
+  lessons: LessonMetadata[];
 }

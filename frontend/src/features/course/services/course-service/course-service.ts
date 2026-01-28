@@ -13,6 +13,16 @@ export class CourseService {
 
   private readonly apiUrl = environment.apiUrl;
 
+  getCoursesMetadata(): Observable<CourseMetadata[]>{
+    return this.http.get<CourseMetadata[]>(`${this.apiUrl}/courses`, {
+      withCredentials: true
+    }).pipe(
+      catchError(err => {
+        console.error('Failed to fetch courses', err);
+        return throwError(() => new Error('Could not fetch courses'));
+      })
+    );
+  }
 
   getCourseById(id: number): Observable<CourseMetadata>{
     return this.http.get<CourseMetadata>(`${this.apiUrl}/courses/${id}`, {
@@ -25,20 +35,6 @@ export class CourseService {
     );
   }
 
-  getCourses(): Observable<CourseMetadata[]>{
-    return this.http.get<CourseMetadata[]>(`${this.apiUrl}/courses`, {
-      withCredentials: true
-    }).pipe(
-      catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
-      })
-    );
-  }
-
-  // getCourseBySlug(slug : string) : Observable<Course> {
-    
-  // }
 
 
   postCourse(course: NewCourse) : Observable<NewCourse> {
@@ -49,6 +45,9 @@ export class CourseService {
       })
     );
   }
+
+  // getCourseBySlug(slug : string) : Observable<Course> {
+  // }
 
   // patchCourse(id: number, article: NewCourse) : Observable<NewCourse> {
   //   return this.http.patch<NewArticle>(this.apiUrl + `/articles/${id}`, article, {withCredentials : true}).pipe(

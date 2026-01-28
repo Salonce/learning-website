@@ -13,6 +13,7 @@ import salonce.dev.todolist.course.domain.Course;
 import salonce.dev.todolist.course.infrastructure.CourseRepository;
 import salonce.dev.todolist.course.presentation.CourseMapper;
 import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
+import salonce.dev.todolist.course.presentation.dtos.CourseMetadataViewResponse;
 import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
 
 import java.util.List;
@@ -25,8 +26,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public List<CourseViewResponse> getAllCourses(){
-        return courseRepository.findAll().stream().map(CourseMapper::toCourseViewResponse).toList();
+    public List<CourseMetadataViewResponse> getAllCoursesMetadata(){
+        return courseRepository.findAllCourseViews().stream().toList();
     }
 
     @Transactional
@@ -64,8 +65,8 @@ public class CourseService {
 
     private int getNextOrderIndex() {
         return courseRepository
-                .findTopByOrderByOrderIndexDesc()
-                .map(course -> course.getOrderIndex() + 1)
+                .findTopByOrderByOrderIdDesc()
+                .map(course -> course.getOrderId() + 1)
                 .orElse(1);
     }
 

@@ -21,7 +21,7 @@ export class NavbarCourses {
 
   constructor(private authService: AuthService, private courseService: CourseService){
     this.principal$ = this.authService.principal$;
-    this.coursesMetadata$ = this.courseService.getCourses();
+    this.coursesMetadata$ = this.courseService.getCoursesMetadata();
   }
 
   onLogout() : void {

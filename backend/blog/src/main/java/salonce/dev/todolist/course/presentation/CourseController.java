@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.application.CourseService;
 import salonce.dev.todolist.course.application.LessonService;
-import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.CourseViewResponse;
-import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.LessonViewResponse;
+import salonce.dev.todolist.course.presentation.dtos.*;
 
 import java.util.List;
 
@@ -22,8 +19,8 @@ public class CourseController {
     private final LessonService lessonService;
 
     @GetMapping("/api/courses")
-    public ResponseEntity<List<CourseViewResponse>> getAllCourseViewResponses(){
-        return ResponseEntity.ok(courseService.getAllCourses());
+    public ResponseEntity<List<CourseMetadataViewResponse>> getAllCourseViewResponses(){
+        return ResponseEntity.ok(courseService.getAllCoursesMetadata());
     }
 
     @GetMapping("/api/courses/{id}")

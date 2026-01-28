@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Entity
 public class Course {
@@ -14,21 +16,23 @@ public class Course {
 
     private String name;
     private String slug;
-    private Integer orderIndex;
+    private Integer orderId;
     private Boolean published;
 
     protected Course() {}
 
-    public Course(String name, String slug, int orderIndex) {
+    public Course(String name, String slug, int orderId) {
         this.name = name;
         this.slug = slug;
-        this.orderIndex = orderIndex;
+        this.orderId = orderId;
         this.published = false;
     }
 
     @Setter
     @Embedded
     private Lessons lessons = new Lessons();
+
+    public List<Lesson> getLessons(){ return lessons.getLessons(); }
 
     public void addLesson(Lesson lesson) {
         lessons.addLesson(lesson, this);

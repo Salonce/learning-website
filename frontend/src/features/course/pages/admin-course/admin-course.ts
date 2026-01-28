@@ -36,7 +36,7 @@ export class AdminCourse implements OnInit{
     this.isLoading.set(true);
     this.error.set(null);
     
-    this.courseService.getCourses().subscribe({
+    this.courseService.getCoursesMetadata().subscribe({
       next: (data) => {
         this.courses.set(data);
         this.isLoading.set(false);

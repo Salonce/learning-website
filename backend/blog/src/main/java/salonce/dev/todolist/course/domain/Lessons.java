@@ -4,12 +4,15 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Embeddable
 public class Lessons {
+
+    @Getter
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<Lesson> lessons = new ArrayList<>();

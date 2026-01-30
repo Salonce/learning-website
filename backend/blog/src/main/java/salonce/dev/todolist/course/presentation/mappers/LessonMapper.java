@@ -1,4 +1,4 @@
-package salonce.dev.todolist.course.presentation;
+package salonce.dev.todolist.course.presentation.mappers;
 
 import salonce.dev.todolist.course.domain.Lesson;
 import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;

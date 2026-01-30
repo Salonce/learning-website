@@ -8,13 +8,14 @@ import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.article.application.exceptions.ArticleNotFound;
-import salonce.dev.todolist.course.application.exceptions.CourseNotFound;
+import salonce.dev.todolist.course.presentation.CourseNotFound;
 import salonce.dev.todolist.course.domain.Course;
+import salonce.dev.todolist.course.domain.Lesson;
 import salonce.dev.todolist.course.infrastructure.CourseRepository;
-import salonce.dev.todolist.course.presentation.CourseMapper;
-import salonce.dev.todolist.course.presentation.dtos.CourseCreateRequest;
-import salonce.dev.todolist.course.presentation.dtos.CourseMetadataResponse;
-import salonce.dev.todolist.course.presentation.dtos.CourseResponse;
+import salonce.dev.todolist.course.infrastructure.LessonRepository;
+import salonce.dev.todolist.course.presentation.mappers.CourseMapper;
+import salonce.dev.todolist.course.presentation.mappers.LessonMapper;
+import salonce.dev.todolist.course.presentation.dtos.*;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class CourseService {
 
     private final AccountService accountService;
+    private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
 
     @Transactional
@@ -49,16 +51,14 @@ public class CourseService {
 
     @Transactional
     public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        requireAdmin(principal);
         Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextOrderIndex());
         return CourseMapper.toCourseViewResponse(courseRepository.save(course));
     }
 
     @Transactional
     public void deleteCourse(AccountPrincipal principal, Long courseId){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        requireAdmin(principal);
         Course course = courseRepository.findById(courseId).orElseThrow(ArticleNotFound::new);
         courseRepository.delete(course);
     }
@@ -70,10 +70,30 @@ public class CourseService {
                 .orElse(1);
     }
 
+    @Transactional
+    public LessonMetadataResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
+        requireAdmin(principal);
+        int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
+        Course course = getCourseById(courseId);
+        Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
+        course.addLesson(lesson);
+        courseRepository.save(course);
+        return LessonMapper.toLessonViewResponse(lesson);
+    }
+
+    public List<LessonMetadataResponse> getLessonsMetadataByCourseSlug(String courseSlug){
+        return lessonRepository.findAllMetadataByCourseSlug(courseSlug);
+    }
+
     private String generateSlug(String name) {
         return name.toLowerCase()
                 .trim()
                 .replaceAll("[^a-z0-9\\s-]", "")
                 .replaceAll("\\s+", "-");
+    }
+
+    private void requireAdmin(AccountPrincipal principal){
+        Account account = accountService.findAccount(principal.id());
+        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
     }
 }

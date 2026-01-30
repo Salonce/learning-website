@@ -23,6 +23,7 @@ public class FilterChainConfig {
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers(HttpMethod.GET,"/actuator/health").permitAll()
                         .requestMatchers("/oauth2/**").permitAll()
+                        .requestMatchers("/api/courses/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/articles/**").permitAll()
                         .anyRequest().authenticated())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))

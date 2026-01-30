@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import salonce.dev.todolist.task.application.exceptions.ApiError;
+import salonce.dev.todolist.shared.ApiError;
 import salonce.dev.todolist.task.application.exceptions.TaskNotFound;
 
 @RestControllerAdvice

@@ -6,7 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import salonce.dev.todolist.article.application.exceptions.ArticleNotFound;
-import salonce.dev.todolist.task.application.exceptions.ApiError;
+import salonce.dev.todolist.shared.ApiError;
 
 @RestControllerAdvice
 public class ArticleControllerAdvice {

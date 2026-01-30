@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.domain.Account;
 import salonce.dev.todolist.account.infrastructure.AccountRepository;
 import salonce.dev.todolist.account.presentation.dtos.PatchProfileRequest;
-import salonce.dev.todolist.task.application.exceptions.AccountNotFound;
+import salonce.dev.todolist.account.presentation.AccountNotFound;
 
 @RequiredArgsConstructor
 @Service

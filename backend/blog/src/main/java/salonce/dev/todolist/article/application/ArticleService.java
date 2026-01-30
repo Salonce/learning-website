@@ -44,6 +44,7 @@ public class ArticleService {
     @Transactional
     public ArticleViewResponse saveArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest){
         Account account = accountService.findAccount(principal.id());
+        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
         Article article = new Article(articleCreateRequest.title(), generateSlug(articleCreateRequest.title()), articleCreateRequest.content(), account);
         return ArticleMapper.toArticleResponse(articleRepository.save(article));
     }
@@ -75,5 +76,4 @@ public class ArticleService {
                 .replaceAll("[^a-z0-9\\s-]", "")
                 .replaceAll("\\s+", "-");
     }
-
 }

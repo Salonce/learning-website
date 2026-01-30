@@ -1,0 +1,15 @@
+<nav class="bg-gray-50 border-b border-gray-200 sticky top-16 z-40 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-center overflow-x-auto space-x-4 py-4 scrollbar-hide">
+
+      @for (course of coursesMetadata$ | async; track course.id) {
+        <a [routerLink]="['/courses', course.slug]"
+           routerLinkActive="bg-amber-600 text-white"
+           class="px-4 py-2 rounded-full text-base sm:text-lg font-semibold text-gray-800 hover:bg-amber-100 hover:text-amber-600 transition-colors whitespace-nowrap cursor-pointer">
+          {{ course.name }}
+        </a>
+      }
+
+    </div>
+  </div>
+</nav>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.application.CourseService;
+import salonce.dev.todolist.course.presentation.dtos.ContentBlockCreateRequest;
 import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
 import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
 import salonce.dev.todolist.course.presentation.dtos.ContentBlockResponse;
@@ -51,6 +52,17 @@ public class LessonController {
         return ResponseEntity.ok(blocks);
     }
 
+    @PostMapping("/api/lessons/{lessonId}/blocks")
+    public ResponseEntity<ContentBlockResponse> saveBlock(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long lessonId, @RequestBody ContentBlockCreateRequest contentBlockCreateRequest){
+        ContentBlockResponse block = courseService.saveContentBlock(lessonId, contentBlockCreateRequest, principal);
+        return ResponseEntity.ok(block);
+    }
+
+    @DeleteMapping("/api/contentblocks/{blockId}")
+    public ResponseEntity<Void> removeContentBlock(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long blockId){
+        courseService.removeContentBlock(blockId, principal);
+        return ResponseEntity.noContent().build();
+    }
 //    @GetMapping("/api/courses/{courseId}/lessons")
 //    public ResponseEntity<List<LessonMetadataResponse>> getLessonsByCourseId(@PathVariable Long courseId){
 //        List<LessonMetadataResponse> lessons = courseService.getLessonsMetadataById(courseId);

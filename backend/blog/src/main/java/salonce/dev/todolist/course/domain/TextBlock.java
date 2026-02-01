@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Entity
-@Table(name = "text_blocks")
 public class TextBlock extends ContentBlock {
 
     @Setter

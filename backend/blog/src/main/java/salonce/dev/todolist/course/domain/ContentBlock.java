@@ -2,6 +2,7 @@ package salonce.dev.todolist.course.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Entity

@@ -8,6 +8,8 @@ import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.domain.ContentBlock;
+import salonce.dev.todolist.course.infrastructure.ContentBlockRepository;
+import salonce.dev.todolist.course.presentation.ContentBlockNotFound;
 import salonce.dev.todolist.course.presentation.CourseNotFound;
 import salonce.dev.todolist.course.domain.Course;
 import salonce.dev.todolist.course.domain.Lesson;
@@ -28,6 +30,7 @@ public class CourseService {
     private final AccountService accountService;
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
+    private final ContentBlockRepository contentBlockRepository;
 
     @Transactional
     public List<CourseMetadataResponse> getAllCoursesMetadata(){
@@ -107,7 +110,23 @@ public class CourseService {
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         List<ContentBlock> contentBlocks = lesson.getContentBlocks();
         return contentBlocks.stream().map(ContentBlockMapper::toContentBlockResponse).toList();
+    }
 
+    @Transactional
+    public ContentBlockResponse saveContentBlock(Long lessonId, ContentBlockCreateRequest contentBlockCreateRequest, AccountPrincipal principal){
+        requireAdmin(principal);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+        ContentBlock contentBlock = ContentBlockMapper.createBlockFromRequest(contentBlockCreateRequest);
+        lesson.addContentBlock(contentBlock);
+        // here should set position
+        contentBlockRepository.save(contentBlock);
+        return ContentBlockMapper.toContentBlockResponse(contentBlock);
+    }
+
+    @Transactional public void removeContentBlock(Long blockId, AccountPrincipal principal){
+        requireAdmin(principal);
+        ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
+        contentBlockRepository.delete(contentBlock);
     }
 
     // UTIL

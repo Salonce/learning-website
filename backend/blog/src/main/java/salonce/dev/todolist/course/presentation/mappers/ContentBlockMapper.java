@@ -28,7 +28,7 @@ public class ContentBlockMapper {
         );
     }
 
-    public ContentBlock createBlockFromRequest(ContentBlockCreateRequest request) {
+    public static ContentBlock createBlockFromRequest(ContentBlockCreateRequest request) {
         return switch (request.type().toUpperCase()) {
             case "TEXT" -> {
                 String content = (String) request.data().get("content");

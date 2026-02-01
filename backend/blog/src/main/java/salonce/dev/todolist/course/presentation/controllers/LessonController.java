@@ -9,6 +9,7 @@ import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.application.CourseService;
 import salonce.dev.todolist.course.presentation.dtos.LessonCreateRequest;
 import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
+import salonce.dev.todolist.course.presentation.dtos.ContentBlockResponse;
 
 import java.util.List;
 
@@ -41,4 +42,29 @@ public class LessonController {
         courseService.deleteLesson(principal, id);
         return ResponseEntity.noContent().build();
     }
+
+    // Blocks
+
+    @GetMapping("/api/lessons/{lessonId}/blocks")
+    public ResponseEntity<List<ContentBlockResponse>> getBlocksByLessonId(@PathVariable Long lessonId){
+        List<ContentBlockResponse> blocks = courseService.getContentBlocksByLessonId(lessonId);
+        return ResponseEntity.ok(blocks);
+    }
+
+//    @GetMapping("/api/courses/{courseId}/lessons")
+//    public ResponseEntity<List<LessonMetadataResponse>> getLessonsByCourseId(@PathVariable Long courseId){
+//        List<LessonMetadataResponse> lessons = courseService.getLessonsMetadataById(courseId);
+//        return ResponseEntity.ok(lessons);
+//    }
+//
+//    @PostMapping("/api/courses/{courseId}/lessons")
+//    public ResponseEntity<LessonMetadataResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
+//        return ResponseEntity.ok(courseService.saveLesson(principal, courseId, lessonCreateRequest));
+//    }
+//
+//    @DeleteMapping("/api/lessons/{id}")
+//    public ResponseEntity<Void> deleteLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
+//        courseService.deleteLesson(principal, id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

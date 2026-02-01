@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
-import salonce.dev.todolist.article.application.exceptions.ArticleNotFound;
+import salonce.dev.todolist.course.domain.ContentBlock;
 import salonce.dev.todolist.course.presentation.CourseNotFound;
 import salonce.dev.todolist.course.domain.Course;
 import salonce.dev.todolist.course.domain.Lesson;
 import salonce.dev.todolist.course.infrastructure.CourseRepository;
 import salonce.dev.todolist.course.infrastructure.LessonRepository;
+import salonce.dev.todolist.course.presentation.LessonNotFound;
+import salonce.dev.todolist.course.presentation.mappers.ContentBlockMapper;
 import salonce.dev.todolist.course.presentation.mappers.CourseMapper;
 import salonce.dev.todolist.course.presentation.mappers.LessonMapper;
 import salonce.dev.todolist.course.presentation.dtos.*;
@@ -40,41 +42,43 @@ public class CourseService {
     @Transactional
     public CourseResponse getCourseViewById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
-        return CourseMapper.toCourseViewResponse(course);
+        return CourseMapper.toCourseMetadataResponse(course);
     }
 
     @Transactional
     public CourseResponse getCourseBySlug(String slug){
         Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
-        return CourseMapper.toCourseViewResponse(course);
+        return CourseMapper.toCourseMetadataResponse(course);
     }
 
     @Transactional
     public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
         requireAdmin(principal);
-        Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextOrderIndex());
-        return CourseMapper.toCourseViewResponse(courseRepository.save(course));
+        Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextCourseOrderIndex());
+        return CourseMapper.toCourseMetadataResponse(courseRepository.save(course));
     }
 
     @Transactional
     public void deleteCourse(AccountPrincipal principal, Long courseId){
         requireAdmin(principal);
-        Course course = courseRepository.findById(courseId).orElseThrow(ArticleNotFound::new);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         courseRepository.delete(course);
     }
 
-    @Transactional
-    public void deleteLesson(AccountPrincipal principal, Long lessonId){
-        requireAdmin(principal);
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(ArticleNotFound::new);
-        lessonRepository.delete(lesson);
-    }
-
-    private int getNextOrderIndex() {
+    private int getNextCourseOrderIndex() {
         return courseRepository
                 .findTopByOrderByOrderIdDesc()
                 .map(course -> course.getOrderId() + 1)
                 .orElse(1);
+    }
+
+    // LESSONS
+
+    @Transactional
+    public void deleteLesson(AccountPrincipal principal, Long lessonId){
+        requireAdmin(principal);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+        lessonRepository.delete(lesson);
     }
 
     @Transactional
@@ -85,7 +89,7 @@ public class CourseService {
         Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
         course.addLesson(lesson);
         courseRepository.save(course);
-        return LessonMapper.toLessonViewResponse(lesson);
+        return LessonMapper.toLessonMetadataResponse(lesson);
     }
 
     public List<LessonMetadataResponse> getLessonsMetadataByCourseSlug(String courseSlug){
@@ -95,6 +99,18 @@ public class CourseService {
     public List<LessonMetadataResponse> getLessonsMetadataById(Long courseId){
         return lessonRepository.findAllMetadataByCourseId(courseId);
     }
+
+    // BLOCKS
+
+    @Transactional
+    public List<ContentBlockResponse> getContentBlocksByLessonId(Long lessonId){
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
+        List<ContentBlock> contentBlocks = lesson.getContentBlocks();
+        return contentBlocks.stream().map(ContentBlockMapper::toContentBlockResponse).toList();
+
+    }
+
+    // UTIL
 
     private String generateSlug(String name) {
         return name.toLowerCase()

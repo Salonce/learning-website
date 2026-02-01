@@ -5,7 +5,7 @@ import salonce.dev.todolist.course.presentation.dtos.CourseResponse;
 import salonce.dev.todolist.course.presentation.dtos.LessonMetadataResponse;
 
 public class CourseMapper {
-    public static CourseResponse toCourseViewResponse(Course course){
+    public static CourseResponse toCourseMetadataResponse(Course course){
         return new CourseResponse(
                 course.getId(),
                 course.getName(),

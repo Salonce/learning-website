@@ -16,6 +16,8 @@ public class Course {
 
     @Setter
     private String name;
+
+    @Setter
     private String slug;
     private Integer orderId;
     private Boolean published;

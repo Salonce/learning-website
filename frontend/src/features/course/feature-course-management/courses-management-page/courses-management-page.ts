@@ -28,6 +28,7 @@ export class CoursesManagementPage implements OnInit {
   // Inline editing
   editingCourseId = signal<number | null>(null);
   editingCourseName = signal('');
+  editingField = signal<'name' | 'slug' | null>(null);
 
   constructor(
     private courseService: CourseService,
@@ -104,11 +105,12 @@ export class CoursesManagementPage implements OnInit {
   }
 
   /**
-   * Start editing a course name
+   * Start editing a course field (name or slug)
    */
-  startEditCourse(course: CourseMetadataResponse) {
+  startEditCourse(course: CourseMetadataResponse, field: 'name' | 'slug') {
     this.editingCourseId.set(course.id);
-    this.editingCourseName.set(course.name);
+    this.editingField.set(field);
+    this.editingCourseName.set(field === 'name' ? course.name : course.slug);
   }
 
   /**
@@ -116,40 +118,60 @@ export class CoursesManagementPage implements OnInit {
    */
   cancelEditCourse() {
     this.editingCourseId.set(null);
+    this.editingField.set(null);
     this.editingCourseName.set('');
   }
 
   /**
-   * Save edited course name
+   * Save edited course field
    */
   saveEditCourse(courseId: number) {
-    const newName = this.editingCourseName().trim();
+    const newValue = this.editingCourseName().trim();
+    const field = this.editingField();
     
-    if (!newName) {
-      this.error.set('Course name cannot be empty');
+    if (!newValue) {
+      this.error.set(`Course ${field} cannot be empty`);
       return;
     }
 
-    // Find the original course to check if name actually changed
+    // Find the original course
     const originalCourse = this.courses().find(c => c.id === courseId);
-    if (originalCourse && originalCourse.name === newName) {
-      // No change, just cancel editing
+    if (!originalCourse) return;
+
+    // Check if value actually changed
+    const originalValue = field === 'name' ? originalCourse.name : originalCourse.slug;
+    if (originalValue === newValue) {
       this.cancelEditCourse();
       return;
     }
 
-    const updateRequest: CourseUpdateRequest = { name: newName };
+    // Warning for slug changes (since they affect URLs)
+    if (field === 'slug') {
+      const confirmMsg = `⚠️ WARNING: Changing the slug will change the course URL!\n\nOld: /courses/${originalCourse.slug}\nNew: /courses/${newValue}\n\nThis will break existing links. Continue?`;
+      if (!confirm(confirmMsg)) {
+        this.cancelEditCourse();
+        return;
+      }
+    }
+
+    // Build update request based on which field is being edited
+    const updateRequest: CourseUpdateRequest = field === 'name' 
+      ? { name: newValue }
+      : { slug: newValue };
 
     this.courseService.updateCourse(courseId, updateRequest).subscribe({
       next: (updatedCourse) => {
         // Update the course in the list
         this.courses.update(list => 
-          list.map(c => c.id === courseId ? { ...c, name: updatedCourse.name } : c)
+          list.map(c => c.id === courseId 
+            ? { ...c, name: updatedCourse.name, slug: updatedCourse.slug }
+            : c
+          )
         );
         this.cancelEditCourse();
       },
       error: (err) => {
-        this.error.set('Failed to update course name');
+        this.error.set(`Failed to update course ${field}`);
         console.error(err);
       }
     });
@@ -167,10 +189,10 @@ export class CoursesManagementPage implements OnInit {
   }
 
   /**
-   * Check if a course is currently being edited
+   * Check if a specific field of a course is being edited
    */
-  isEditingCourse(courseId: number): boolean {
-    return this.editingCourseId() === courseId;
+  isEditingCourseField(courseId: number, field: 'name' | 'slug'): boolean {
+    return this.editingCourseId() === courseId && this.editingField() === field;
   }
 
   manageLessons(courseId: number) {

@@ -18,6 +18,7 @@ public class Lesson {
     @Setter
     private String title;
 
+    @Setter
     private String slug;
 
     private int orderId;

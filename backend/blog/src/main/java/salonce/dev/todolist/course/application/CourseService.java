@@ -57,8 +57,8 @@ public class CourseService {
     @Transactional
     public CourseResponse updateCourse(Long id, CourseUpdateRequest request){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
-        System.out.println(request.name());
         if (request.name() != null) course.setName(request.name());
+        if (request.slug() != null) course.setSlug(request.slug());
         return CourseMapper.toCourseResponse(course);
     }
 
@@ -103,6 +103,7 @@ public class CourseService {
     public LessonResponse updateLesson(Long id, LessonUpdateRequest request){
         Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFound::new);
         if (request.title() != null) lesson.setTitle(request.title());
+        if (request.slug() != null) lesson.setSlug(request.slug());
         return LessonMapper.toLessonResponse(lesson);
     }
 

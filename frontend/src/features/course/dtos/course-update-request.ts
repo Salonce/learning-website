@@ -1,3 +1,4 @@
-export interface CourseUpdateRequest{
-    name: string;
+export interface CourseUpdateRequest {
+    name?: string;
+    slug?: string;
 }

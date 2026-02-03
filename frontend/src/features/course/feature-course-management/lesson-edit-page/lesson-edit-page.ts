@@ -10,11 +10,12 @@ import { LessonService } from '../../services/lesson-service/lesson-service';
 import { Lesson } from '../../models/lesson';
 import { ContentBlock, TextBlock } from '../../models/content-block';
 import { ContentBlockService } from '../../services/content-block-service/content-block-service';
+import { QuillEditor } from '../../../../shared/components/quill-editor/quill-editor';
 
 @Component({
   selector: 'app-lesson-edit-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, QuillEditor],
   templateUrl: './lesson-edit-page.html',
   styleUrl: './lesson-edit-page.css'
 })
@@ -71,9 +72,6 @@ export class LessonEditPage implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Load lesson data from API
-   */
   loadLesson(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -83,7 +81,6 @@ export class LessonEditPage implements OnInit, OnDestroy {
       .subscribe({
         next: lesson => {
           this.lesson.set(lesson);
-          // Sort blocks by position
           const sortedBlocks = [...lesson.contentBlocks].sort((a, b) => a.position - b.position);
           this.contentBlocks.set(sortedBlocks);
           this.isLoading.set(false);
@@ -96,17 +93,10 @@ export class LessonEditPage implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Handle textarea input
-   */
-  onContentInput(event: Event): void {
-    const target = event.target as HTMLTextAreaElement;
-    this.newBlockContent.set(target.value);
+  onQuillContentChange(content: string): void {
+    this.newBlockContent.set(content);
   }
 
-  /**
-   * Toggle add block form visibility
-   */
   toggleAddBlockForm(): void {
     this.showAddBlockForm.update(v => !v);
     if (!this.showAddBlockForm()) {
@@ -114,25 +104,22 @@ export class LessonEditPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Add a new text block
-   */
   addTextBlock(): void {
     const content = this.newBlockContent().trim();
     
-    if (!content) {
+    // Check if content is empty or just contains empty Quill tags
+    if (!content || content === '<p><br></p>' || content === '<p></p>') {
       this.error.set('Content cannot be empty');
       return;
     }
 
     if (this.isSubmitting()) {
-      return; // Prevent double submission
+      return;
     }
 
     this.isSubmitting.set(true);
     this.error.set(null);
 
-    // Create the block request
     const blockRequest = {
       type: 'TEXT',
       data: { content: content }
@@ -142,11 +129,7 @@ export class LessonEditPage implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: createdBlock => {
-          // Add the new block to the list
-          // Note: You may need to convert the response to ContentBlock if needed
           this.contentBlocks.update(blocks => [...blocks, createdBlock as any]);
-          
-          // Reset form state
           this.isSubmitting.set(false);
           this.showAddBlockForm.set(false);
           this.newBlockContent.set('');
@@ -159,53 +142,36 @@ export class LessonEditPage implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Remove a content block
-   */
   removeBlock(blockId: number): void {
     if (!confirm('Are you sure you want to delete this block?')) {
       return;
     }
 
-    // Store previous state for rollback
     const previousBlocks = this.contentBlocks();
-    
-    // Optimistic update
     this.contentBlocks.update(blocks => blocks.filter(b => b.id !== blockId));
 
     this.contentBlockService.removeContentBlock(blockId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          // Success - block already removed optimistically
           console.log('Block deleted successfully');
         },
         error: err => {
           console.error('Failed to delete block:', err);
           this.error.set(err.message || 'Failed to delete block');
-          // Rollback optimistic update
           this.contentBlocks.set(previousBlocks);
         }
       });
   }
 
-  /**
-   * Navigate back to lessons list
-   */
   backToLessons(): void {
     this.router.navigate(['/dashboard/courses', this.courseId, 'lessons']);
   }
 
-  /**
-   * Clear error message
-   */
   clearError(): void {
     this.error.set(null);
   }
 
-  /**
-   * Type guard helper for template
-   */
   getTextBlockContent(block: ContentBlock): string {
     if (this.isTextBlock(block)) {
       return block.content;
@@ -213,9 +179,6 @@ export class LessonEditPage implements OnInit, OnDestroy {
     return '';
   }
 
-  /**
-   * Type guard: check if block is TextBlock
-   */
   private isTextBlock(block: ContentBlock): block is TextBlock {
     return block.type === 'TEXT';
   }

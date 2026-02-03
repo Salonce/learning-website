@@ -43,26 +43,22 @@
       </button>
     </div>
 
-    <!-- Add Block Form -->
+    <!-- Add Block Form with Quill Editor -->
     @if (showAddBlockForm()) {
       <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <form (submit)="addTextBlock(); $event.preventDefault()" class="space-y-4">
+        <div class="space-y-4">
           <div>
-            <label for="blockContent" class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
               Text Block Content
             </label>
-            <textarea
-              id="blockContent"
-              [value]="newBlockContent()"
-              (input)="onContentInput($event)"
-              placeholder="Enter content..."
-              rows="4"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-            ></textarea>
+            <app-quill-editor
+              [content]="newBlockContent()"
+              (contentChange)="onQuillContentChange($event)">
+            </app-quill-editor>
           </div>
           <div class="flex gap-2">
             <button
-              type="submit"
+              (click)="addTextBlock()"
               [disabled]="!newBlockContent().trim() || isSubmitting()"
               [class.opacity-50]="!newBlockContent().trim() || isSubmitting()"
               [class.cursor-not-allowed]="!newBlockContent().trim() || isSubmitting()"
@@ -76,11 +72,11 @@
               Cancel
             </button>
           </div>
-        </form>
+        </div>
       </div>
     }
 
-    <!-- Loading / Empty / Blocks List -->
+    <!-- Blocks List -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
       @if (isLoading()) {
         <div class="flex flex-col items-center justify-center py-12">
@@ -97,7 +93,6 @@
         </div>
       } @else {
         <div class="divide-y divide-gray-200">
-          <!-- ✅ FIXED: Correct @for syntax -->
           @for (block of contentBlocks(); track block.id) {
             <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
               <div class="flex justify-between items-start">
@@ -109,17 +104,14 @@
                     <span class="text-sm text-gray-500">Position {{ block.position }}</span>
                   </div>
 
-                  <!-- Text Block Content -->
                   @if (block.type === 'TEXT') {
-                    <p class="mt-2 text-gray-700 whitespace-pre-wrap">{{ getTextBlockContent(block) }}</p>
+                    <div class="mt-2 prose max-w-none" [innerHTML]="getTextBlockContent(block)"></div>
                   }
 
-                  <!-- Image Block (placeholder for future) -->
                   @if (block.type === 'IMAGE') {
                     <div class="mt-2 text-gray-500 italic">Image block (not yet implemented)</div>
                   }
 
-                  <!-- Other block types -->
                   @if (block.type !== 'TEXT' && block.type !== 'IMAGE') {
                     <div class="mt-2 text-gray-500 italic">{{ block.type }} block</div>
                   }

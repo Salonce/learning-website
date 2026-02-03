@@ -1,34 +1,48 @@
-@if (lesson) {
+<!-- PAGE WRAPPER -->
+<div class="lesson-read-page max-w-6xl mx-auto mt-16 px-4 sm:px-6 lg:px-8">
 
-  <div class="lesson-read-page">
+  @if (lesson) {
 
-    <h1 class="lesson-title">
-      {{ lesson.title }}
-    </h1>
+    <!-- LESSON TITLE -->
+    <h1 class="text-3xl font-bold mb-6 leading-tight">{{ lesson.title }}</h1>
 
-    <div class="lesson-content">
+    <!-- LESSON CONTENT -->
+    <div class="lesson-content space-y-6">
 
       @for (block of lesson.contentBlocks; track block.id) {
 
         @if (isTextBlock(block)) {
           <div class="content-block text-block">
             <div
-              class="text-content"
+              class="mt-2 prose max-w-none whitespace-pre-wrap"
               [innerHTML]="getSafeHtml(block.content)">
             </div>
           </div>
         }
 
-        <!-- Future blocks -->
-        <!--
-        @if (block.type === 'IMAGE') { ... }
-        -->
+        @if (block.type === 'IMAGE') {
+          <div class="content-block image-block mt-4 text-gray-500 italic">
+            Image block (not yet implemented)
+          </div>
+        }
+
+        @if (block.type !== 'TEXT' && block.type !== 'IMAGE') {
+          <div class="content-block mt-4 text-gray-500 italic">
+            {{ block.type }} block
+          </div>
+        }
 
       }
 
     </div>
-  </div>
 
-} @else {
-  <p>Loading lesson...</p>
-}
+  } @else {
+
+    <div class="flex justify-center items-center h-48">
+      <p class="text-gray-500 italic text-lg animate-pulse">
+        Loading lesson...
+      </p>
+    </div>
+
+  }
+</div>

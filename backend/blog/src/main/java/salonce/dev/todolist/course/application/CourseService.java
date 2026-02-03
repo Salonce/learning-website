@@ -43,7 +43,7 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponse getCourseViewById(Long id){
+    public CourseResponse getCourseResponseById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseResponse(course);
     }
@@ -51,6 +51,13 @@ public class CourseService {
     @Transactional
     public CourseResponse getCourseBySlug(String slug){
         Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
+        return CourseMapper.toCourseResponse(course);
+    }
+
+    @Transactional
+    public CourseResponse updateCourse(Long id, CourseUpdateRequest request){
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
+        if (request.name() != null) course.setName(course.getName());
         return CourseMapper.toCourseResponse(course);
     }
 
@@ -88,6 +95,13 @@ public class CourseService {
     public LessonResponse getLessonBySlugs(AccountPrincipal principal, String courseSlug, String lessonSlug){
         requireAdmin(principal);
         Lesson lesson = lessonRepository.findByCourseSlugAndLessonSlug(courseSlug, lessonSlug).orElseThrow(LessonNotFound::new);
+        return LessonMapper.toLessonResponse(lesson);
+    }
+
+    @Transactional
+    public LessonResponse updateLesson(Long id, LessonUpdateRequest request){
+        Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFound::new);
+        if (request.title() != null) lesson.setTitle(request.title());
         return LessonMapper.toLessonResponse(lesson);
     }
 

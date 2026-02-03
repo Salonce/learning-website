@@ -5,6 +5,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { CourseMetadataResponse } from '../../dtos/course-metadata-response';
 import { CourseCreateRequest } from '../../dtos/course-create-request';
 import { CourseResponse } from '../../dtos/course-response';
+import { CourseUpdateRequest } from '../../dtos/course-update-request';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,8 @@ export class CourseService {
       withCredentials: true
     }).pipe(
       catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
+        console.error('Failed to get courses', err);
+        return throwError(() => new Error('Could not get courses'));
       })
     );
   }
@@ -30,22 +31,31 @@ export class CourseService {
       withCredentials: true
     }).pipe(
       catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
+        console.error('Failed to get course', err);
+        return throwError(() => new Error('Could not get courses'));
       })
     );
   }
 
+  updateCourse(id: number, CourseUpdateRequest: CourseUpdateRequest) : Observable<CourseResponse> {
+    return this.http.patch<CourseResponse>(`${this.apiUrl}/courses/${id}`, CourseUpdateRequest, {withCredentials : true}).pipe(
+      catchError(err => {
+        console.error('Failed to update course', err);
+        return throwError(() => new Error('Could not update course'));
+      })
+    );
+  }
 
-
-  postCourse(course: CourseCreateRequest) : Observable<CourseCreateRequest> {
-    return this.http.post<CourseCreateRequest>(`${this.apiUrl}/courses`, course, {withCredentials : true}).pipe(
+  postCourse(CourseCreateRequest: CourseCreateRequest) : Observable<CourseResponse> {
+    return this.http.post<CourseResponse>(`${this.apiUrl}/courses`, CourseCreateRequest, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post course', err);
-        return throwError(() => new Error('Could not fetch course'));
+        return throwError(() => new Error('Could not post course'));
       })
     );
   }
+
+  
 
   // getCourseBySlug(slug : string) : Observable<Course> {
   // }

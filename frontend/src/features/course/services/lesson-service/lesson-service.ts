@@ -10,6 +10,7 @@ import { Lesson } from '../../models/lesson';
 import { LessonResponse } from '../../dtos/lesson-response';
 import { map, retry } from 'rxjs';
 import { LessonMapper } from '../../lesson-mapper';
+import { LessonUpdateRequest } from '../../dtos/lesson-update-request';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,8 @@ export class LessonService {
       map(dto => LessonMapper.fromDto(dto)),
       retry(1),
       catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
+        console.error('Failed to get lesson', err);
+        return throwError(() => new Error('Could not get lesson'));
       })
     );
   }
@@ -42,8 +43,8 @@ export class LessonService {
       map(dto => LessonMapper.fromDto(dto)),
       retry(1),
       catchError(err => {
-        console.error('Failed to fetch courses', err);
-        return throwError(() => new Error('Could not fetch courses'));
+        console.error('Failed to get lesson', err);
+        return throwError(() => new Error('Could not get lesson'));
       })
     );
   }
@@ -52,7 +53,16 @@ export class LessonService {
     return this.http.post<LessonCreateRequest>(`${this.apiUrl}/courses/${courseId}/lessons`, lesson, {withCredentials : true}).pipe(
       catchError(err => {
         console.error('Failed to post lesson', err);
-        return throwError(() => new Error('Could not fetch a lesson'));
+        return throwError(() => new Error('Could not post a lesson'));
+      })
+    );
+  }
+
+  updateLesson(id: number, lessonUpdateRequest: LessonUpdateRequest) : Observable<LessonResponse> {
+    return this.http.patch<LessonResponse>(`${this.apiUrl}/courses/${id}`, lessonUpdateRequest, {withCredentials : true}).pipe(
+      catchError(err => {
+        console.error('Failed to update lesson', err);
+        return throwError(() => new Error('Could not update lesson'));
       })
     );
   }
@@ -69,8 +79,8 @@ export class LessonService {
   getLessonsMetadataForCourseBySlug(courseSlug: string): Observable<LessonMetadataResponse[]>{
     return this.http.get<LessonMetadataResponse[]>(`${this.apiUrl}/courses/slug/${courseSlug}/lessons`, {withCredentials : true}).pipe(
       catchError(err => {
-        console.error('Failed to post lesson', err);
-        return throwError(() => new Error('Could not fetch lesson'));
+        console.error('Failed to get lessons', err);
+        return throwError(() => new Error('Could not get lessons'));
       })
     );
   }
@@ -78,8 +88,8 @@ export class LessonService {
     getLessonsMetadataForCourseById(courseId: number): Observable<LessonMetadataResponse[]>{
     return this.http.get<LessonMetadataResponse[]>(`${this.apiUrl}/courses/${courseId}/lessons`, {withCredentials : true}).pipe(
       catchError(err => {
-        console.error('Failed to post lesson', err);
-        return throwError(() => new Error('Could not fetch lesson'));
+        console.error('Failed to get lessons', err);
+        return throwError(() => new Error('Could not get lessons'));
       })
     );
   }

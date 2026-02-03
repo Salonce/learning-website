@@ -40,6 +40,11 @@ public class LessonController {
         return ResponseEntity.ok(courseService.getLessonById(principal, id));
     }
 
+    @PatchMapping("/api/lessons/{id}")
+    public ResponseEntity<LessonResponse> updateLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @RequestBody LessonUpdateRequest lessonUpdateRequest){
+        return ResponseEntity.ok(courseService.updateLesson(id, lessonUpdateRequest));
+    }
+
     @GetMapping("/api/courses/slug/{courseSlug}/lessons/slug/{lessonSlug}")
     public ResponseEntity<LessonResponse> getLessonBySlugs(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable String courseSlug, @PathVariable String lessonSlug){
         return ResponseEntity.ok(courseService.getLessonBySlugs(principal, courseSlug, lessonSlug));

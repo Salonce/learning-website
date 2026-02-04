@@ -42,7 +42,7 @@ public class LessonController {
 
     @PatchMapping("/api/lessons/{id}")
     public ResponseEntity<LessonResponse> updateLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @RequestBody LessonUpdateRequest lessonUpdateRequest){
-        return ResponseEntity.ok(courseService.updateLesson(id, lessonUpdateRequest));
+        return ResponseEntity.ok(courseService.updateLesson(principal, id, lessonUpdateRequest));
     }
 
     @GetMapping("/api/courses/slug/{courseSlug}/lessons/slug/{lessonSlug}")

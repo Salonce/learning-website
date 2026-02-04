@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.domain.Account;
+import salonce.dev.todolist.account.domain.Role;
 import salonce.dev.todolist.account.infrastructure.AccountRepository;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.account.presentation.AccountMapper;
@@ -39,6 +40,6 @@ public class UserService {
 
     private void requireAdmin(AccountPrincipal principal){
         Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
     }
 }

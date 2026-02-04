@@ -6,6 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.application.AccountService;
 import salonce.dev.todolist.account.domain.Account;
+import salonce.dev.todolist.account.domain.Role;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.domain.ContentBlock;
 import salonce.dev.todolist.course.infrastructure.ContentBlockRepository;
@@ -55,7 +56,8 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponse updateCourse(Long id, CourseUpdateRequest request){
+    public CourseResponse updateCourse(AccountPrincipal principal, Long id, CourseUpdateRequest request){
+        requireAdmin(principal);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         if (request.name() != null) course.setName(request.name());
         if (request.slug() != null) course.setSlug(request.slug());
@@ -100,7 +102,8 @@ public class CourseService {
     }
 
     @Transactional
-    public LessonResponse updateLesson(Long id, LessonUpdateRequest request){
+    public LessonResponse updateLesson(AccountPrincipal principal, Long id, LessonUpdateRequest request){
+        requireAdmin(principal);
         Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFound::new);
         if (request.title() != null) lesson.setTitle(request.title());
         if (request.slug() != null) lesson.setSlug(request.slug());
@@ -179,6 +182,6 @@ public class CourseService {
 
     private void requireAdmin(AccountPrincipal principal){
         Account account = accountService.findAccount(principal.id());
-        if (!account.isAdmin()) throw new AccessDeniedException("Access forbidden.");
+        if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
     }
 }

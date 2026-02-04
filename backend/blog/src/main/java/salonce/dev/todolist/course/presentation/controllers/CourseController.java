@@ -33,7 +33,7 @@ public class CourseController {
 
     @PatchMapping("/api/courses/{id}")
     public ResponseEntity<CourseResponse> updateCourse(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @RequestBody CourseUpdateRequest courseUpdateRequest){
-        return ResponseEntity.ok(courseService.updateCourse(id, courseUpdateRequest));
+        return ResponseEntity.ok(courseService.updateCourse(principal, id, courseUpdateRequest));
     }
 
     @DeleteMapping("/api/courses/{id}")

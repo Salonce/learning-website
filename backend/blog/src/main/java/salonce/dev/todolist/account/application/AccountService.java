@@ -2,9 +2,12 @@ package salonce.dev.todolist.account.application;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.domain.Account;
+import salonce.dev.todolist.account.domain.Role;
 import salonce.dev.todolist.account.infrastructure.AccountRepository;
+import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.account.presentation.dtos.PatchProfileRequest;
 import salonce.dev.todolist.account.presentation.AccountNotFound;
 
@@ -24,7 +27,7 @@ public class AccountService {
                 .orElseGet(() ->
                 {
                     Account newAccount = new Account(accountDto.email(), accountDto.name(), accountDto.subject(), accountDto.provider());
-                    if (accountRepository.count() == 0) newAccount.addAdminRole();
+                    if (accountRepository.count() == 0) newAccount.addRole(Role.ADMIN);
                     return accountRepository.save(newAccount);
                 });
     }
@@ -40,5 +43,8 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-
+    private void requireAdmin(AccountPrincipal principal){
+        Account account = findAccount(principal.id());
+        if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
+    }
 }

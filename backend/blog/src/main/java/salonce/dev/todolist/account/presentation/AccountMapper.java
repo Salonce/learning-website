@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 public class AccountMapper {
     public static AccountResponse toAccountResponse(Account account){
-        return new AccountResponse(account.getId(), account.getEmail(), account.getName(), mapRolesToStrings(account.getRoles()));
+        return new AccountResponse(account.getId(), account.getEmail(), account.getName(), account.getRoles());
     }
 
     public static UserResponse toUserResponse(Account account){
-        return new UserResponse(account.getId(), account.getEmail(), account.getName(), mapRolesToStrings(account.getRoles()));
+        return new UserResponse(account.getId(), account.getEmail(), account.getName(), account.getRoles());
     }
 
     private static Set<String> mapRolesToStrings(Set<Role> roles) {

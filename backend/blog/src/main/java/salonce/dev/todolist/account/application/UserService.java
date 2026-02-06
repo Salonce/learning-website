@@ -21,25 +21,20 @@ public class UserService {
     private final AccountService accountService;
 
     public List<UserResponse> getAllUsers(AccountPrincipal principal){
-        requireAdmin(principal);
+        accountService.requireAdmin(principal);
         return accountRepository.findAll().stream().map(AccountMapper::toUserResponse).toList();
     }
 
     public UserResponse getUser(AccountPrincipal principal, Long id){
-        requireAdmin(principal);
+        accountService.requireAdmin(principal);
         Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
         return AccountMapper.toUserResponse(account);
     }
 
     public UserResponse updateUser(AccountPrincipal principal, Long id, UserUpdateRequest request){
-        requireAdmin(principal);
+        accountService.requireAdmin(principal);
         Account account = accountRepository.findById(id).orElseThrow(AccountNotFound::new);
         // HERE UPDATE USER
         return AccountMapper.toUserResponse(account);
-    }
-
-    private void requireAdmin(AccountPrincipal principal){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
     }
 }

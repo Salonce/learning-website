@@ -57,7 +57,7 @@ public class CourseService {
 
     @Transactional
     public CourseResponse updateCourse(AccountPrincipal principal, Long id, CourseUpdateRequest request){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         if (request.name() != null) course.setName(request.name());
         if (request.slug() != null) course.setSlug(request.slug());
@@ -66,14 +66,14 @@ public class CourseService {
 
     @Transactional
     public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextCourseOrderIndex());
         return CourseMapper.toCourseResponse(courseRepository.save(course));
     }
 
     @Transactional
     public void deleteCourse(AccountPrincipal principal, Long courseId){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         courseRepository.delete(course);
     }
@@ -89,21 +89,21 @@ public class CourseService {
 
     @Transactional
     public LessonResponse getLessonById(AccountPrincipal principal, Long lessonId){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 
     @Transactional
     public LessonResponse getLessonBySlugs(AccountPrincipal principal, String courseSlug, String lessonSlug){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findByCourseSlugAndLessonSlug(courseSlug, lessonSlug).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 
     @Transactional
     public LessonResponse updateLesson(AccountPrincipal principal, Long id, LessonUpdateRequest request){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFound::new);
         if (request.title() != null) lesson.setTitle(request.title());
         if (request.slug() != null) lesson.setSlug(request.slug());
@@ -112,14 +112,14 @@ public class CourseService {
 
     @Transactional
     public void deleteLesson(AccountPrincipal principal, Long lessonId){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         lessonRepository.delete(lesson);
     }
 
     @Transactional
     public LessonMetadataResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
         Course course = getCourseById(courseId);
         Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
@@ -147,7 +147,7 @@ public class CourseService {
 
     @Transactional
     public ContentBlockResponse saveContentBlock(Long lessonId, ContentBlockCreateRequest contentBlockCreateRequest, AccountPrincipal principal){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         ContentBlock contentBlock = ContentBlockMapper.createBlockFromRequest(contentBlockCreateRequest);
         lesson.addContentBlock(contentBlock);
@@ -159,14 +159,14 @@ public class CourseService {
 
     @Transactional
     public ContentBlockResponse updateContentBlock(Long blockId, ContentBlockUpdateRequest updateRequest, AccountPrincipal principal) {
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
         ContentBlockMapper.updateBlockFromRequest(contentBlock, updateRequest);
         return ContentBlockMapper.toContentBlockResponse(contentBlock);
     }
 
     @Transactional public void removeContentBlock(Long blockId, AccountPrincipal principal){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
         contentBlockRepository.delete(contentBlock);
     }
@@ -178,10 +178,5 @@ public class CourseService {
                 .trim()
                 .replaceAll("[^a-z0-9\\s-]", "")
                 .replaceAll("\\s+", "-");
-    }
-
-    private void requireAdmin(AccountPrincipal principal){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
     }
 }

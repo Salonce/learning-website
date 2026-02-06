@@ -74,9 +74,24 @@
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex flex-wrap gap-2">
                       @for (role of user.roles; track role) {
-                        <span [class]="getRoleBadgeClass(role)">
-                          {{ role }}
-                        </span>
+                        <!-- Role badges with different colors -->
+                        @if (role === Role.ADMIN) {
+                          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                            {{ role }}
+                          </span>
+                        } @else if (role === Role.MODERATOR) {
+                          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                            {{ role }}
+                          </span>
+                        } @else if (role === Role.EDITOR) {
+                          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
+                            {{ role }}
+                          </span>
+                        } @else if (role === Role.USER) {
+                          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
+                            {{ role }}
+                          </span>
+                        }
                       }
                       @if (user.roles.length === 0) {
                         <span class="text-sm text-gray-400 italic">No roles assigned</span>
@@ -86,15 +101,68 @@
                   <td class="px-6 py-4">
                     <div class="flex flex-wrap gap-2">
                       @for (role of availableRoles; track role) {
-                        <button
-                          (click)="toggleRole(user, role)"
-                          [class]="hasRole(user, role) ? getActiveRoleButtonClass(role) : getInactiveRoleButtonClass(role)"
-                          [title]="hasRole(user, role) ? 'Remove ' + role : 'Add ' + role">
-                          {{ role }}
-                          <span class="ml-1 font-bold">
-                            {{ hasRole(user, role) ? '✓' : '+' }}
-                          </span>
-                        </button>
+                        <!-- MODERATOR role toggle buttons -->
+                        @if (role === Role.MODERATOR) {
+                          @if (hasRole(user, role)) {
+                            <button
+                              (click)="toggleRole(user, role)"
+                              class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 border-2 bg-yellow-500 text-white border-yellow-500 hover:bg-yellow-600 hover:border-yellow-600"
+                              title="Remove MODERATOR">
+                              {{ role }}
+                              <span class="ml-1 font-bold">✓</span>
+                            </button>
+                          } @else {
+                            <button
+                              (click)="toggleRole(user, role)"
+                              class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 border-2 bg-white text-yellow-700 border-yellow-300 hover:bg-yellow-50 hover:border-yellow-500"
+                              title="Add MODERATOR">
+                              {{ role }}
+                              <span class="ml-1 font-bold">+</span>
+                            </button>
+                          }
+                        }
+                        
+                        <!-- EDITOR role toggle buttons -->
+                        @if (role === Role.EDITOR) {
+                          @if (hasRole(user, role)) {
+                            <button
+                              (click)="toggleRole(user, role)"
+                              class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 border-2 bg-purple-600 text-white border-purple-600 hover:bg-purple-700 hover:border-purple-700"
+                              title="Remove EDITOR">
+                              {{ role }}
+                              <span class="ml-1 font-bold">✓</span>
+                            </button>
+                          } @else {
+                            <button
+                              (click)="toggleRole(user, role)"
+                              class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 border-2 bg-white text-purple-600 border-purple-300 hover:bg-purple-50 hover:border-purple-500"
+                              title="Add EDITOR">
+                              {{ role }}
+                              <span class="ml-1 font-bold">+</span>
+                            </button>
+                          }
+                        }
+                        
+                        <!-- USER role toggle buttons -->
+                        @if (role === Role.USER) {
+                          @if (hasRole(user, role)) {
+                            <button
+                              (click)="toggleRole(user, role)"
+                              class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 border-2 bg-gray-600 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-700"
+                              title="Remove USER">
+                              {{ role }}
+                              <span class="ml-1 font-bold">✓</span>
+                            </button>
+                          } @else {
+                            <button
+                              (click)="toggleRole(user, role)"
+                              class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 border-2 bg-white text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-500"
+                              title="Add USER">
+                              {{ role }}
+                              <span class="ml-1 font-bold">+</span>
+                            </button>
+                          }
+                        }
                       }
                     </div>
                   </td>

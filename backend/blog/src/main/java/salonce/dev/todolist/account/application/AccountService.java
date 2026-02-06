@@ -62,8 +62,13 @@ public class AccountService {
         return AccountMapper.toAccountResponse(accountRepository.save(account));
     }
 
-    private void requireAdmin(AccountPrincipal principal){
+    public void requireAdmin(AccountPrincipal principal){
         Account account = findAccount(principal.id());
         if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
+    }
+
+    public void requireAdminOrEditor(AccountPrincipal principal){
+        Account account = findAccount(principal.id());
+        if (!account.hasRole(Role.ADMIN) && !account.hasRole(Role.EDITOR)) throw new AccessDeniedException("Access forbidden.");
     }
 }

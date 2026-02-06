@@ -45,14 +45,14 @@ public class ArticleService {
     @Transactional
     public ArticleViewResponse saveArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest){
         Account account = accountService.findAccount(principal.id());
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Article article = new Article(articleCreateRequest.title(), generateSlug(articleCreateRequest.title()), articleCreateRequest.content(), account);
         return ArticleMapper.toArticleResponse(articleRepository.save(article));
     }
 
     @Transactional
     public ArticleViewResponse patchArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest, Long articleId){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
 
         if (articleCreateRequest.title() != null) article.setTitle(articleCreateRequest.title());
@@ -63,7 +63,7 @@ public class ArticleService {
 
     @Transactional
     public void deleteArticle(AccountPrincipal principal, Long articleId){
-        requireAdmin(principal);
+        accountService.requireAdminOrEditor(principal);
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
         articleRepository.delete(article);
     }
@@ -74,10 +74,5 @@ public class ArticleService {
                 .trim()
                 .replaceAll("[^a-z0-9\\s-]", "")
                 .replaceAll("\\s+", "-");
-    }
-
-    private void requireAdmin(AccountPrincipal principal){
-        Account account = accountService.findAccount(principal.id());
-        if (!account.hasRole(Role.ADMIN)) throw new AccessDeniedException("Access forbidden.");
     }
 }

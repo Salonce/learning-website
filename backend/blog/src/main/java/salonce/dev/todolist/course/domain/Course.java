@@ -19,15 +19,15 @@ public class Course {
 
     @Setter
     private String slug;
-    private Integer orderId;
+    private Integer position;
     private Boolean published;
 
     protected Course() {}
 
-    public Course(String name, String slug, int orderId) {
+    public Course(String name, String slug, int position) {
         this.name = name;
         this.slug = slug;
-        this.orderId = orderId;
+        this.position = position;
         this.published = false;
     }
 

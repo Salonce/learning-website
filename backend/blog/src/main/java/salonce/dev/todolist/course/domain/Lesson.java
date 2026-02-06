@@ -21,7 +21,7 @@ public class Lesson {
     @Setter
     private String slug;
 
-    private int orderId;
+    private int position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
@@ -33,10 +33,10 @@ public class Lesson {
 
     protected Lesson() {}
 
-    public Lesson(String title, String slug, int orderId) {
+    public Lesson(String title, String slug, int position) {
         this.title = title;
         this.slug = slug;
-        this.orderId = orderId;
+        this.position = position;
     }
 
     //Content blocks

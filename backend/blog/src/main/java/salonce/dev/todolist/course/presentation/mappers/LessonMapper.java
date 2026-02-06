@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class LessonMapper {
     public static LessonMetadataResponse toLessonMetadataResponse(Lesson lesson){
-        return new LessonMetadataResponse(lesson.getId(), lesson.getTitle(), lesson.getSlug(), lesson.getOrderId());
+        return new LessonMetadataResponse(lesson.getId(), lesson.getTitle(), lesson.getSlug(), lesson.getPosition());
     }
 
     public static LessonResponse toLessonResponse(Lesson lesson){
@@ -16,7 +16,7 @@ public class LessonMapper {
                 lesson.getId(),
                 lesson.getTitle(),
                 lesson.getSlug(),
-                lesson.getOrderId(),
+                lesson.getPosition(),
                 lesson.getContentBlocks() == null
                         ? Collections.emptyList()
                         : lesson.getContentBlocks().stream()

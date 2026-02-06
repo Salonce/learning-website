@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     Optional<Course> findBySlug(String slug);
-    Optional<Course> findTopByOrderByOrderIdDesc();
+    Optional<Course> findTopByOrderByPositionDesc();
 
     @Query("SELECT c FROM Course c")
     @EntityGraph(attributePaths = {"lessons"})
@@ -24,12 +24,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
         c.id,
         c.name,
         c.slug,
-        c.orderId,
+        c.position,
         count(l)
     )
     from Course c
     left join c.lessons.lessons l
-    group by c.id, c.name, c.slug, c.orderId
+    group by c.id, c.name, c.slug, c.position
     """)
     List<CourseMetadataResponse> findAllCourseViews();
 }

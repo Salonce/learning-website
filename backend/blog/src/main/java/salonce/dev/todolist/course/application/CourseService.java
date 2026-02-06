@@ -2,11 +2,8 @@ package salonce.dev.todolist.course.application;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import salonce.dev.todolist.account.application.AccountService;
-import salonce.dev.todolist.account.domain.Account;
-import salonce.dev.todolist.account.domain.Role;
 import salonce.dev.todolist.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.todolist.course.domain.ContentBlock;
 import salonce.dev.todolist.course.infrastructure.ContentBlockRepository;
@@ -80,8 +77,8 @@ public class CourseService {
 
     private int getNextCourseOrderIndex() {
         return courseRepository
-                .findTopByOrderByOrderIdDesc()
-                .map(course -> course.getOrderId() + 1)
+                .findTopByOrderByPositionDesc()
+                .map(course -> course.getPosition() + 1)
                 .orElse(1);
     }
 

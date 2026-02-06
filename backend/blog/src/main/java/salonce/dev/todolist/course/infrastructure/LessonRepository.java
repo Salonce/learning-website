@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
-    @Query("SELECT COALESCE(MAX(l.orderId), 0) FROM Lesson l WHERE l.course.id = :courseId")
+    @Query("SELECT COALESCE(MAX(l.position), 0) FROM Lesson l WHERE l.course.id = :courseId")
     int findMaxOrderIndex(@Param("courseId") Long courseId);
 
     @Query("""
@@ -21,11 +21,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 l.id,
                 l.title,
                 l.slug,
-                l.orderId
+                l.position
             )
             FROM Lesson l
             WHERE l.course.slug = :courseSlug
-            ORDER BY l.orderId ASC
+            ORDER BY l.position ASC
         """)
     List<LessonMetadataResponse> findAllMetadataByCourseSlug(@Param("courseSlug") String courseSlug);
 
@@ -34,11 +34,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 l.id,
                 l.title,
                 l.slug,
-                l.orderId
+                l.position
             )
             FROM Lesson l
             WHERE l.course.id = :id
-            ORDER BY l.orderId ASC
+            ORDER BY l.position ASC
         """)
     List<LessonMetadataResponse> findAllMetadataByCourseId(@Param("id") Long id);
 

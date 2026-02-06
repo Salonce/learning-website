@@ -19,6 +19,8 @@ public class Course {
 
     @Setter
     private String slug;
+
+    @Setter
     private Integer position;
     private Boolean published;
 

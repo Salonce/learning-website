@@ -32,7 +32,7 @@ public class CourseService {
 
     @Transactional
     public List<CourseMetadataResponse> getAllCoursesMetadata(){
-        return courseRepository.findAllCourseViews().stream().toList();
+        return courseRepository.findAllCourseViewsOrderByPosition().stream().toList();
     }
 
     @Transactional
@@ -80,6 +80,16 @@ public class CourseService {
                 .findTopByOrderByPositionDesc()
                 .map(course -> course.getPosition() + 1)
                 .orElse(1);
+    }
+
+    @Transactional
+    public void reorderCourses(List<Long> orderedCourseIds) {
+        for (int i = 0; i < orderedCourseIds.size(); i++) {
+            Long courseId = orderedCourseIds.get(i);
+            Course course = getCourseById(courseId);
+            course.setPosition(i + 1);
+            courseRepository.save(course);
+        }
     }
 
     // LESSONS

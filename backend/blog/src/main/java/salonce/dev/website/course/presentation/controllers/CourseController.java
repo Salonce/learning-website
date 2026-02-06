@@ -46,4 +46,10 @@ public class CourseController {
     public ResponseEntity<CourseResponse> getCourseViewResponse(@PathVariable String slug){
         return ResponseEntity.ok(courseService.getCourseBySlug(slug));
     }
+
+    @PutMapping("api/courses/positions")
+    public ResponseEntity<Void> reorderCourses(@RequestBody ReorderRequest request) {
+        courseService.reorderCourses(request.ids());
+        return ResponseEntity.ok().build();
+    }
 }

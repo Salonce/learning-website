@@ -11,7 +11,7 @@
       </div>
 
       <!-- Desktop Links -->
-      <div class="hidden md:flex items-center space-x-3">
+      <!-- <div class="hidden md:flex items-center space-x-3">
         @if (principal$ | async; as principal) {
           @if (principal.roles.includes('ADMIN') || principal.roles.includes('MODERATOR') || principal.roles.includes('EDITOR')) {
             <a [routerLink]="['/dashboard']"
@@ -37,7 +37,46 @@
             Log in
           </a>
         }
+      </div> -->
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center space-x-3">
+        @if (principal$ | async; as principal) {
+          @if (principal.roles.includes('ADMIN') || principal.roles.includes('MODERATOR') || principal.roles.includes('EDITOR')) {
+            <a [routerLink]="['/dashboard']"
+              class="relative px-3 py-1.5 text-2xl font-medium text-gray-800
+                      transition-colors duration-200 hover:text-amber-600
+                      before:absolute before:bottom-0 before:left-0 before:w-full before:h-1
+                      before:bg-amber-500 before:scale-x-0 before:origin-left before:transition-transform hover:before:scale-x-100">
+              Dashboard
+            </a>
+          }
+          <a [routerLink]="['/settings']"
+            class="relative px-3 py-1.5 text-2xl font-medium text-gray-800
+                    transition-colors duration-200 hover:text-amber-600
+                    before:absolute before:bottom-0 before:left-0 before:w-full before:h-1
+                    before:bg-amber-500 before:scale-x-0 before:origin-left before:transition-transform hover:before:scale-x-100">
+            Settings
+          </a>
+          <button (click)="onLogout()"
+                  class="relative px-3 py-1.5 text-2xl font-medium text-gray-800
+                        transition-colors duration-200 hover:text-amber-600
+                        before:absolute before:bottom-0 before:left-0 before:w-full before:h-1
+                        before:bg-amber-500 before:scale-x-0 before:origin-left before:transition-transform hover:before:scale-x-100
+                        cursor-pointer">
+            Log out
+          </button>
+
+        } @else {
+          <a href="/oauth2/authorization/google"
+            class="relative px-3 py-1.5 text-2xl font-medium text-gray-800
+                    transition-colors duration-200 hover:text-amber-600
+                    before:absolute before:bottom-0 before:left-0 before:w-full before:h-1
+                    before:bg-amber-500 before:scale-x-0 before:origin-left before:transition-transform hover:before:scale-x-100">
+            Log in
+          </a>
+        }
       </div>
+
 
       <!-- Mobile menu button -->
       <div class="md:hidden flex items-center">

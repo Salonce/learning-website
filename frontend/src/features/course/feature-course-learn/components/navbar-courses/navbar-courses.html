@@ -1,14 +1,14 @@
-<nav class="bg-stone-100 border-b border-stone-200 sticky top-16 z-40 shadow-sm">
+<nav class="bg-[#F3EFE0] border-b border-amber-200/50 sticky top-[56px] z-40 shadow-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-center overflow-x-auto space-x-3 py-1 scrollbar-hide">
+    <div class="flex justify-center overflow-x-auto space-x-3 py-1.5 scrollbar-hide">
 
       @for (course of coursesMetadata$ | async; track course.id) {
         <a
           [routerLink]="['/courses', course.slug]"
-          routerLinkActive="bg-amber-500 text-white"
-          class="px-4 py-1 rounded-full text-lg sm:text-xl font-semibold
-                 text-stone-700 hover:bg-amber-100 hover:text-amber-600
-                 transition-colors whitespace-nowrap cursor-pointer">
+          routerLinkActive="bg-amber-600 text-white shadow-md"
+          class="px-4 py-0.5 rounded-full text-lg font-semibold
+                 text-amber-900/80 hover:bg-amber-200/50 hover:text-amber-900
+                 transition-all whitespace-nowrap cursor-pointer">
           {{ course.name }}
         </a>
       }

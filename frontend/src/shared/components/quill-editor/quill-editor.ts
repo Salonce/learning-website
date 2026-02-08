@@ -21,15 +21,16 @@ export class QuillEditor {
   editorModules = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ 'header': 1 }, { 'header': 2 }],
+      [{ 'color': [
+        '#000000', '#451a03', '#92400e', '#d97706', '#f59e0b', // Browns & Ambers
+        '#111827', '#374151', '#4b5563' // Grays
+      ] }, { 'background': [] }], 
+      ['blockquote', 'table'], // Added table icon
+      [{ 'header': [1, 2, 3, false] }],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       ['link', 'image'],
       ['clean']
     ],
-    imageResize: {
-      modules: ['Resize', 'DisplaySize']
-    }
+    table: true, // Enables table interaction
   };
 }

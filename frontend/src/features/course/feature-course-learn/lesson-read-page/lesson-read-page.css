@@ -1,0 +1,69 @@
+/* Main container & typography */
+.lesson-read-page {
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1a1a1a;
+  line-height: 1.6;
+  max-width: 850px;
+}
+
+.text-block ::ng-deep {
+  /* Headings */
+  h1, h2, h3 {
+    color: #451a03;
+    margin: 2rem 0 1rem;
+  }
+
+  /* Paragraphs */
+  p {
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+  }
+
+  /* Blockquotes as rule/info boxes */
+  blockquote {
+    border-left: 4px solid #d97706;
+    background: #fffbeb;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: #92400e;
+  }
+
+  /* Bold text for emphasis */
+  strong {
+    color: #b45309;
+    font-weight: 600;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #f0e6cc;
+  }
+
+  th {
+    background: #F3EFE0;
+    color: #451a03;
+    font-weight: 700;
+  }
+
+  tr:nth-child(even) td {
+    background: #fdfaf7; /* Subtle striped rows */
+  }
+
+  tr:hover td {
+    background: #fff7e6; /* Light hover effect */
+  }
+}

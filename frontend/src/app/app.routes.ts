@@ -12,7 +12,7 @@ import { CourseLayout } from '../features/course/feature-course-learn/course-lay
 import { CourseLessonsManagementPage } from '../features/course/feature-course-management/course-lessons-management-page/course-lessons-management-page';
 import { ArticlesPage } from '../features/article/feature-article-reader/articles-page/articles-page';
 import { LessonEditPage } from '../features/course/feature-course-management/lesson-edit-page/lesson-edit-page';
-import { LessonReadPage } from '../features/course/feature-course-management/lesson-read-page/lesson-read-page';
+import { LessonReadPage } from '../features/course/feature-course-learn/lesson-read-page/lesson-read-page';
 import { UsersEditPage } from '../features/course/feature-users-management/users-edit-page/users-edit-page';
 
 export const routes: Routes = [

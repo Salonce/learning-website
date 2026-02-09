@@ -31,23 +31,23 @@ public class LessonController {
     }
 
     @PostMapping("/api/courses/{courseId}/lessons")
-    public ResponseEntity<LessonMetadataResponse> saveLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
-        return ResponseEntity.ok(courseService.saveLesson(principal, courseId, lessonCreateRequest));
+    public ResponseEntity<LessonMetadataResponse> saveLesson(@PathVariable Long courseId, @RequestBody LessonCreateRequest lessonCreateRequest){
+        return ResponseEntity.ok(courseService.saveLesson(courseId, lessonCreateRequest));
     }
 
     @GetMapping("/api/lessons/{id}")
     public ResponseEntity<LessonResponse> getLessonById(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
-        return ResponseEntity.ok(courseService.getLessonById(principal, id));
+        return ResponseEntity.ok(courseService.getLessonById(id));
     }
 
     @PatchMapping("/api/lessons/{id}")
-    public ResponseEntity<LessonResponse> updateLesson(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @RequestBody LessonUpdateRequest lessonUpdateRequest){
-        return ResponseEntity.ok(courseService.updateLesson(principal, id, lessonUpdateRequest));
+    public ResponseEntity<LessonResponse> updateLesson(@PathVariable Long id, @RequestBody LessonUpdateRequest lessonUpdateRequest){
+        return ResponseEntity.ok(courseService.updateLesson(id, lessonUpdateRequest));
     }
 
     @GetMapping("/api/courses/slug/{courseSlug}/lessons/slug/{lessonSlug}")
-    public ResponseEntity<LessonResponse> getLessonBySlugs(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable String courseSlug, @PathVariable String lessonSlug){
-        return ResponseEntity.ok(courseService.getLessonBySlugs(principal, courseSlug, lessonSlug));
+    public ResponseEntity<LessonResponse> getLessonBySlugs(@PathVariable String courseSlug, @PathVariable String lessonSlug){
+        return ResponseEntity.ok(courseService.getLessonBySlugs(courseSlug, lessonSlug));
     }
 
     @DeleteMapping("/api/lessons/{id}")
@@ -71,20 +71,20 @@ public class LessonController {
     }
 
     @PostMapping("/api/lessons/{lessonId}/contentblocks")
-    public ResponseEntity<ContentBlockResponse> saveBlock(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long lessonId, @RequestBody ContentBlockCreateRequest contentBlockCreateRequest){
-        ContentBlockResponse block = courseService.saveContentBlock(lessonId, contentBlockCreateRequest, principal);
+    public ResponseEntity<ContentBlockResponse> saveBlock(@PathVariable Long lessonId, @RequestBody ContentBlockCreateRequest contentBlockCreateRequest){
+        ContentBlockResponse block = courseService.saveContentBlock(lessonId, contentBlockCreateRequest);
         return ResponseEntity.ok(block);
     }
 
     @DeleteMapping("/api/contentblocks/{blockId}")
-    public ResponseEntity<Void> removeContentBlock(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long blockId){
-        courseService.removeContentBlock(blockId, principal);
+    public ResponseEntity<Void> removeContentBlock(@PathVariable Long blockId){
+        courseService.removeContentBlock(blockId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/api/contentblocks/{blockId}")
-    public ResponseEntity<ContentBlockResponse> updateContentBlock(@PathVariable Long blockId, @RequestBody ContentBlockUpdateRequest updateRequest, @AuthenticationPrincipal AccountPrincipal principal) {
-        ContentBlockResponse response = courseService.updateContentBlock(blockId, updateRequest, principal);
+    public ResponseEntity<ContentBlockResponse> updateContentBlock(@PathVariable Long blockId, @RequestBody ContentBlockUpdateRequest updateRequest) {
+        ContentBlockResponse response = courseService.updateContentBlock(blockId, updateRequest);
         return ResponseEntity.ok(response);
     }
 

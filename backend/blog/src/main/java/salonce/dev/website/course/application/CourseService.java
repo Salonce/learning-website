@@ -2,6 +2,7 @@ package salonce.dev.website.course.application;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import salonce.dev.website.account.application.AccountService;
 import salonce.dev.website.account.infrastructure.security.AccountPrincipal;
@@ -20,6 +21,8 @@ import salonce.dev.website.course.presentation.mappers.LessonMapper;
 import salonce.dev.website.course.presentation.dtos.*;
 
 import java.util.List;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 
 @RequiredArgsConstructor
 @Service
@@ -40,50 +43,45 @@ public class CourseService {
         return courseRepository.findById(id).orElseThrow(CourseNotFound::new);
     }
 
-    @Transactional
+    @PreAuthorize("hasAuthority('course:read')")
     public CourseResponse getCourseResponseById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseResponse(course);
     }
 
+    @PreAuthorize("hasAuthority('course:read')")
     @Transactional
     public CourseResponse getCourseBySlug(String slug){
         Course course = courseRepository.findBySlug(slug).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseResponse(course);
     }
 
+    @PreAuthorize("hasAuthority('course:update')")
     @Transactional
-    public CourseResponse updateCourse(AccountPrincipal principal, Long id, CourseUpdateRequest request){
-        accountService.requireAdminOrEditor(principal);
+    public CourseResponse updateCourse(Long id, CourseUpdateRequest request){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         if (request.name() != null) course.setName(request.name());
         if (request.slug() != null) course.setSlug(request.slug());
         return CourseMapper.toCourseResponse(course);
     }
 
+    @PreAuthorize("hasAuthority('course:create')")
     @Transactional
-    public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
-        accountService.requireAdminOrEditor(principal);
+    public CourseResponse saveCourse(CourseCreateRequest courseCreateRequest){
         Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextCourseOrderIndex());
         return CourseMapper.toCourseResponse(courseRepository.save(course));
     }
 
+    @PreAuthorize("hasAuthority('course:delete')")
     @Transactional
-    public void deleteCourse(AccountPrincipal principal, Long courseId) {
-        accountService.requireAdminOrEditor(principal);
+    public void deleteCourse(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         int deletedPosition = course.getPosition();
         courseRepository.delete(course);
         courseRepository.shiftPositionsAfterDeletion(deletedPosition);
     }
 
-    private int getNextCourseOrderIndex() {
-        return courseRepository
-                .findTopByOrderByPositionDesc()
-                .map(course -> course.getPosition() + 1)
-                .orElse(1);
-    }
-
+    @PreAuthorize("hasAuthority('course:reorder')")
     @Transactional
     public void reorderCourses(AccountPrincipal principal, ReorderRequest request) {
         accountService.requireAdminOrEditor(principal);
@@ -96,8 +94,15 @@ public class CourseService {
         }
     }
 
+    private int getNextCourseOrderIndex() {
+        return courseRepository
+                .findTopByOrderByPositionDesc()
+                .map(course -> course.getPosition() + 1)
+                .orElse(1);
+    }
     // LESSONS
 
+    @PreAuthorize("hasAuthority('lesson:reorder')")
     @Transactional
     public void reorderLessons(AccountPrincipal principal, ReorderRequest request) {
         accountService.requireAdminOrEditor(principal);
@@ -110,29 +115,30 @@ public class CourseService {
         }
     }
 
-
+    @PreAuthorize("hasAuthority('lesson:read')")
     @Transactional
-    public LessonResponse getLessonById(AccountPrincipal principal, Long lessonId){
-        accountService.requireAdminOrEditor(principal);
+    public LessonResponse getLessonById(Long lessonId){
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 
+    @PreAuthorize("hasAuthority('lesson:read')")
     @Transactional
-    public LessonResponse getLessonBySlugs(AccountPrincipal principal, String courseSlug, String lessonSlug){
+    public LessonResponse getLessonBySlugs(String courseSlug, String lessonSlug){
         Lesson lesson = lessonRepository.findByCourseSlugAndLessonSlug(courseSlug, lessonSlug).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 
+    @PreAuthorize("hasAuthority('lesson:update')")
     @Transactional
-    public LessonResponse updateLesson(AccountPrincipal principal, Long id, LessonUpdateRequest request){
-        accountService.requireAdminOrEditor(principal);
+    public LessonResponse updateLesson(Long id, LessonUpdateRequest request){
         Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFound::new);
         if (request.title() != null) lesson.setTitle(request.title());
         if (request.slug() != null) lesson.setSlug(request.slug());
         return LessonMapper.toLessonResponse(lesson);
     }
 
+    @PreAuthorize("hasAuthority('lesson:delete')")
     @Transactional
     public void deleteLesson(AccountPrincipal principal, Long lessonId) {
         accountService.requireAdminOrEditor(principal);
@@ -143,9 +149,9 @@ public class CourseService {
         lessonRepository.shiftPositionsAfterDeletion(courseId, deletedPosition);
     }
 
+    @PreAuthorize("hasAuthority('lesson:create')")
     @Transactional
-    public LessonMetadataResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
-        accountService.requireAdminOrEditor(principal);
+    public LessonMetadataResponse saveLesson(Long courseId, LessonCreateRequest lessonCreateRequest){
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
@@ -154,16 +160,19 @@ public class CourseService {
         return LessonMapper.toLessonMetadataResponse(lesson);
     }
 
+    @PreAuthorize("hasAuthority('lesson:read')")
     public List<LessonMetadataResponse> getLessonsMetadataByCourseSlug(String courseSlug){
         return lessonRepository.findAllMetadataByCourseSlug(courseSlug);
     }
 
+    @PreAuthorize("hasAuthority('lesson:read')")
     public List<LessonMetadataResponse> getLessonsMetadataById(Long courseId){
         return lessonRepository.findAllMetadataByCourseId(courseId);
     }
 
     // BLOCKS
 
+    @PreAuthorize("hasAuthority('block:read')")
     @Transactional
     public List<ContentBlockResponse> getContentBlocksByLessonId(Long lessonId){
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
@@ -171,9 +180,9 @@ public class CourseService {
         return contentBlocks.stream().map(ContentBlockMapper::toContentBlockResponse).toList();
     }
 
+    @PreAuthorize("hasAuthority('block:create')")
     @Transactional
-    public ContentBlockResponse saveContentBlock(Long lessonId, ContentBlockCreateRequest contentBlockCreateRequest, AccountPrincipal principal){
-        accountService.requireAdminOrEditor(principal);
+    public ContentBlockResponse saveContentBlock(Long lessonId, ContentBlockCreateRequest contentBlockCreateRequest){
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         ContentBlock contentBlock = ContentBlockMapper.createBlockFromRequest(contentBlockCreateRequest);
         lesson.addContentBlock(contentBlock);
@@ -183,16 +192,16 @@ public class CourseService {
         return ContentBlockMapper.toContentBlockResponse(contentBlock);
     }
 
+    @PreAuthorize("hasAuthority('block:update')")
     @Transactional
-    public ContentBlockResponse updateContentBlock(Long blockId, ContentBlockUpdateRequest updateRequest, AccountPrincipal principal) {
-        accountService.requireAdminOrEditor(principal);
+    public ContentBlockResponse updateContentBlock(Long blockId, ContentBlockUpdateRequest updateRequest) {
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
         ContentBlockMapper.updateBlockFromRequest(contentBlock, updateRequest);
         return ContentBlockMapper.toContentBlockResponse(contentBlock);
     }
 
-    @Transactional public void removeContentBlock(Long blockId, AccountPrincipal principal){
-        accountService.requireAdminOrEditor(principal);
+    @PreAuthorize("hasAuthority('block:delete')")
+    @Transactional public void removeContentBlock(Long blockId){
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
         contentBlockRepository.delete(contentBlock);
     }

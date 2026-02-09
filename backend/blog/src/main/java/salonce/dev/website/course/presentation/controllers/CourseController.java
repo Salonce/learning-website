@@ -22,8 +22,8 @@ public class CourseController {
     }
 
     @PostMapping("/api/courses")
-    public ResponseEntity<CourseResponse> saveCourse(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody CourseCreateRequest courseCreateRequest){
-        return ResponseEntity.ok(courseService.saveCourse(principal, courseCreateRequest));
+    public ResponseEntity<CourseResponse> saveCourse(@RequestBody CourseCreateRequest courseCreateRequest){
+        return ResponseEntity.ok(courseService.saveCourse(courseCreateRequest));
     }
 
     @GetMapping("/api/courses/{id}")
@@ -32,13 +32,13 @@ public class CourseController {
     }
 
     @PatchMapping("/api/courses/{id}")
-    public ResponseEntity<CourseResponse> updateCourse(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id, @RequestBody CourseUpdateRequest courseUpdateRequest){
-        return ResponseEntity.ok(courseService.updateCourse(principal, id, courseUpdateRequest));
+    public ResponseEntity<CourseResponse> updateCourse(@PathVariable Long id, @RequestBody CourseUpdateRequest courseUpdateRequest){
+        return ResponseEntity.ok(courseService.updateCourse(id, courseUpdateRequest));
     }
 
     @DeleteMapping("/api/courses/{id}")
     public ResponseEntity<Void> deleteCourse(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
-        courseService.deleteCourse(principal, id);
+        courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import salonce.dev.website.account.application.AccountService;
-import salonce.dev.website.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.website.course.domain.ContentBlock;
 import salonce.dev.website.course.infrastructure.ContentBlockRepository;
 import salonce.dev.website.course.presentation.ContentBlockNotFound;
@@ -20,6 +19,8 @@ import salonce.dev.website.course.presentation.mappers.LessonMapper;
 import salonce.dev.website.course.presentation.dtos.*;
 
 import java.util.List;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +41,6 @@ public class CourseService {
         return courseRepository.findById(id).orElseThrow(CourseNotFound::new);
     }
 
-    @Transactional
     public CourseResponse getCourseResponseById(Long id){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         return CourseMapper.toCourseResponse(course);
@@ -53,8 +53,7 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponse updateCourse(AccountPrincipal principal, Long id, CourseUpdateRequest request){
-        accountService.requireAdminOrEditor(principal);
+    public CourseResponse updateCourse(Long id, CourseUpdateRequest request){
         Course course = courseRepository.findById(id).orElseThrow(CourseNotFound::new);
         if (request.name() != null) course.setName(request.name());
         if (request.slug() != null) course.setSlug(request.slug());
@@ -62,31 +61,21 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponse saveCourse(AccountPrincipal principal, CourseCreateRequest courseCreateRequest){
-        accountService.requireAdminOrEditor(principal);
+    public CourseResponse saveCourse(CourseCreateRequest courseCreateRequest){
         Course course = new Course(courseCreateRequest.name(), generateSlug(courseCreateRequest.name()), getNextCourseOrderIndex());
         return CourseMapper.toCourseResponse(courseRepository.save(course));
     }
 
     @Transactional
-    public void deleteCourse(AccountPrincipal principal, Long courseId) {
-        accountService.requireAdminOrEditor(principal);
+    public void deleteCourse(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         int deletedPosition = course.getPosition();
         courseRepository.delete(course);
         courseRepository.shiftPositionsAfterDeletion(deletedPosition);
     }
 
-    private int getNextCourseOrderIndex() {
-        return courseRepository
-                .findTopByOrderByPositionDesc()
-                .map(course -> course.getPosition() + 1)
-                .orElse(1);
-    }
-
     @Transactional
-    public void reorderCourses(AccountPrincipal principal, ReorderRequest request) {
-        accountService.requireAdminOrEditor(principal);
+    public void reorderCourses(ReorderRequest request) {
         List<Long> orderedCourseIds = request.ids();
         for (int i = 0; i < orderedCourseIds.size(); i++) {
             Long courseId = orderedCourseIds.get(i);
@@ -96,11 +85,16 @@ public class CourseService {
         }
     }
 
+    private int getNextCourseOrderIndex() {
+        return courseRepository
+                .findTopByOrderByPositionDesc()
+                .map(course -> course.getPosition() + 1)
+                .orElse(1);
+    }
     // LESSONS
 
     @Transactional
-    public void reorderLessons(AccountPrincipal principal, ReorderRequest request) {
-        accountService.requireAdminOrEditor(principal);
+    public void reorderLessons(ReorderRequest request) {
         List<Long> orderedLessonIds = request.ids();
         for (int i = 0; i < orderedLessonIds.size(); i++) {
             Long lessonId = orderedLessonIds.get(i);
@@ -110,23 +104,20 @@ public class CourseService {
         }
     }
 
-
     @Transactional
-    public LessonResponse getLessonById(AccountPrincipal principal, Long lessonId){
-        accountService.requireAdminOrEditor(principal);
+    public LessonResponse getLessonById(Long lessonId){
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 
     @Transactional
-    public LessonResponse getLessonBySlugs(AccountPrincipal principal, String courseSlug, String lessonSlug){
+    public LessonResponse getLessonBySlugs(String courseSlug, String lessonSlug){
         Lesson lesson = lessonRepository.findByCourseSlugAndLessonSlug(courseSlug, lessonSlug).orElseThrow(LessonNotFound::new);
         return LessonMapper.toLessonResponse(lesson);
     }
 
     @Transactional
-    public LessonResponse updateLesson(AccountPrincipal principal, Long id, LessonUpdateRequest request){
-        accountService.requireAdminOrEditor(principal);
+    public LessonResponse updateLesson(Long id, LessonUpdateRequest request){
         Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFound::new);
         if (request.title() != null) lesson.setTitle(request.title());
         if (request.slug() != null) lesson.setSlug(request.slug());
@@ -134,8 +125,7 @@ public class CourseService {
     }
 
     @Transactional
-    public void deleteLesson(AccountPrincipal principal, Long lessonId) {
-        accountService.requireAdminOrEditor(principal);
+    public void deleteLesson(Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         Integer deletedPosition = lesson.getPosition();
         Long courseId = lesson.getCourse().getId();
@@ -144,8 +134,7 @@ public class CourseService {
     }
 
     @Transactional
-    public LessonMetadataResponse saveLesson(AccountPrincipal principal, Long courseId, LessonCreateRequest lessonCreateRequest){
-        accountService.requireAdminOrEditor(principal);
+    public LessonMetadataResponse saveLesson(Long courseId, LessonCreateRequest lessonCreateRequest){
         int nextOrderIndex = lessonRepository.findMaxOrderIndex(courseId) + 1;
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFound::new);
         Lesson lesson = new Lesson(lessonCreateRequest.title(), generateSlug(lessonCreateRequest.title()), nextOrderIndex);
@@ -172,8 +161,7 @@ public class CourseService {
     }
 
     @Transactional
-    public ContentBlockResponse saveContentBlock(Long lessonId, ContentBlockCreateRequest contentBlockCreateRequest, AccountPrincipal principal){
-        accountService.requireAdminOrEditor(principal);
+    public ContentBlockResponse saveContentBlock(Long lessonId, ContentBlockCreateRequest contentBlockCreateRequest){
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(LessonNotFound::new);
         ContentBlock contentBlock = ContentBlockMapper.createBlockFromRequest(contentBlockCreateRequest);
         lesson.addContentBlock(contentBlock);
@@ -184,15 +172,13 @@ public class CourseService {
     }
 
     @Transactional
-    public ContentBlockResponse updateContentBlock(Long blockId, ContentBlockUpdateRequest updateRequest, AccountPrincipal principal) {
-        accountService.requireAdminOrEditor(principal);
+    public ContentBlockResponse updateContentBlock(Long blockId, ContentBlockUpdateRequest updateRequest) {
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
         ContentBlockMapper.updateBlockFromRequest(contentBlock, updateRequest);
         return ContentBlockMapper.toContentBlockResponse(contentBlock);
     }
 
-    @Transactional public void removeContentBlock(Long blockId, AccountPrincipal principal){
-        accountService.requireAdminOrEditor(principal);
+    @Transactional public void removeContentBlock(Long blockId){
         ContentBlock contentBlock = contentBlockRepository.findById(blockId).orElseThrow(ContentBlockNotFound::new);
         contentBlockRepository.delete(contentBlock);
     }

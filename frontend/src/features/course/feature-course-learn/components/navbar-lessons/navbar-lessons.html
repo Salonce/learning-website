@@ -1,13 +1,18 @@
-<aside class="w-64 bg-white shadow-lg flex-shrink-0">
+<aside class="w-64 bg-[#F7F3E8] border-r border-amber-200/40 flex-shrink-0 h-screen sticky top-[92px] overflow-y-auto">
   <div class="p-6">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 px-4">
+    <h2 class="text-sm font-bold text-amber-900/60 mb-6 px-4 uppercase tracking-widest">
       {{ courseSlug() | titlecase }}
     </h2>
 
-    <nav class="divide-y divide-gray-200">
+    <nav class="space-y-2">
       <a *ngFor="let lesson of lessons()"
          [routerLink]="['/courses', courseSlug(), lesson.slug]"
-         class="block px-4 py-2 bg-gray-50 hover:bg-amber-200 text-gray-800 font-medium transition-colors">
+         routerLinkActive="bg-[#EADA9D] text-amber-950 shadow-sm !before:scale-y-100 font-bold"
+         class="relative block px-4 py-2.5 text-stone-800 font-medium transition-all duration-200 
+                hover:bg-[#EADA9D]/40 hover:text-amber-900
+                before:absolute before:left-0 before:top-0 before:h-full before:w-1.5 
+                before:bg-amber-600 before:scale-y-0 before:transition-transform 
+                before:origin-top hover:before:scale-y-100">
         {{ lesson.title }}
       </a>
     </nav>

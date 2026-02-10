@@ -1,15 +1,16 @@
+<!-- course-layout or wherever you have this -->
 <app-top-navbar></app-top-navbar>
 <app-navbar-courses></app-navbar-courses>
 
-<!-- Flex container for sidebar + content -->
-<div class="flex w-full mt-6 px-4 sm:px-6 lg:px-8 gap-8">
+<!-- Flex container with better spacing and background -->
+<div class="flex w-full min-h-screen bg-gray-50">
 
-  <!-- Sidebar -->
-  <app-navbar-lessons class="w-64" ></app-navbar-lessons>
+  <!-- Sidebar - Sticky -->
+  <app-navbar-lessons></app-navbar-lessons>
 
-  <!-- Main content -->
-  <main class="flex-1">
-    <router-outlet></router-outlet>
+  <!-- Main content with padding and max-width -->
+  <main class="flex-1 p-8 lg:p-10">
+      <router-outlet></router-outlet>
   </main>
 
 </div>

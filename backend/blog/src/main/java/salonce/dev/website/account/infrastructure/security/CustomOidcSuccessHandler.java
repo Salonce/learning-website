@@ -41,18 +41,24 @@ public class CustomOidcSuccessHandler implements AuthenticationSuccessHandler {
         String email = oidcUser.getEmail();
         String name = oidcUser.getGivenName();
 
+        // Load or create account
         AccountDto accountDto = new AccountDto(email, name, subject, provider);
         Account account = accountService.loadOrCreateAccount(accountDto);
-        AccountPrincipal accountPrincipal = new AccountPrincipal(account.getId(), account.getEmail(), account.getRoles());
 
+        // Create AccountPrincipal with all data
+        AccountPrincipal accountPrincipal = AccountPrincipal.from(account);
+
+        // Create authentication with authorities from the principal
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 accountPrincipal,
                 null,
-                authentication.getAuthorities()
+                accountPrincipal.getAuthorities()  // Use authorities from AccountPrincipal
         );
 
+        // Set authentication in security context
         SecurityContextHolder.getContext().setAuthentication(auth);
-        System.out.printf(frontendUrl);
+
+        // Redirect to frontend
         response.sendRedirect(frontendUrl);
     }
 }

@@ -1,5 +1,4 @@
 <div>
-  <label class="block text-gray-500 text-sm mb-2" for="content">Content</label>
   <quill-editor
     id="content"
     [(ngModel)]="content"
@@ -7,6 +6,10 @@
     name="content"
     [modules]="editorModules"
     placeholder="Write your article here..."
-    class="w-full border border-gray-300 rounded-xl overflow-hidden text-base">
+    class="w-full rounded-2xl shadow-sm text-gray-800 text-base
+           min-h-[250px] 
+           focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400
+           transition-all duration-200 bg-white"
+  >
   </quill-editor>
 </div>

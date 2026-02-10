@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import salonce.dev.website.account.application.AccountService;
 import salonce.dev.website.account.domain.Account;
@@ -34,6 +35,7 @@ public class ArticleService {
         return ArticleMapper.toArticleResponse(article);
     }
 
+
     @Transactional
     public ArticleViewResponse getArticle(Long id){
         Article article = articleRepository.findById(id).orElseThrow(ArticleNotFound::new);
@@ -43,14 +45,12 @@ public class ArticleService {
     @Transactional
     public ArticleViewResponse saveArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest){
         Account account = accountService.findAccount(principal.id());
-        accountService.requireAdminOrEditor(principal);
         Article article = new Article(articleCreateRequest.title(), generateSlug(articleCreateRequest.title()), articleCreateRequest.content(), account);
         return ArticleMapper.toArticleResponse(articleRepository.save(article));
     }
 
     @Transactional
-    public ArticleViewResponse patchArticle(AccountPrincipal principal, ArticleCreateRequest articleCreateRequest, Long articleId){
-        accountService.requireAdminOrEditor(principal);
+    public ArticleViewResponse patchArticle(ArticleCreateRequest articleCreateRequest, Long articleId){
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
 
         if (articleCreateRequest.title() != null) article.setTitle(articleCreateRequest.title());
@@ -60,13 +60,12 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteArticle(AccountPrincipal principal, Long articleId){
-        accountService.requireAdminOrEditor(principal);
+    public void deleteArticle(Long articleId){
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFound::new);
         articleRepository.delete(article);
     }
 
-
+    // util
     private String generateSlug(String title) {
         return title.toLowerCase()
                 .trim()

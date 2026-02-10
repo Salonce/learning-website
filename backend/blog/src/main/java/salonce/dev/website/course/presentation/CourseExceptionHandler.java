@@ -12,4 +12,18 @@ public class CourseExceptionHandler {
     public ResponseEntity<ApiError> courseNotFound(){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError("Course not found"));
     }
+
+    @ExceptionHandler(LessonNotFound.class)
+    public ResponseEntity<ApiError> lessonNotFound() {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiError("Lesson not found"));
+    }
+
+    @ExceptionHandler(ContentBlockNotFound.class)
+    public ResponseEntity<ApiError> blockNotFound() {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiError("Lesson not found"));
+    }
 }

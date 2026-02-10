@@ -2,10 +2,8 @@ package salonce.dev.website.course.application;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import salonce.dev.website.account.application.AccountService;
-import salonce.dev.website.account.infrastructure.security.AccountPrincipal;
 import salonce.dev.website.course.domain.ContentBlock;
 import salonce.dev.website.course.infrastructure.ContentBlockRepository;
 import salonce.dev.website.course.presentation.ContentBlockNotFound;

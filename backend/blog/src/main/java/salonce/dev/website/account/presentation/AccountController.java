@@ -22,13 +22,13 @@ public class AccountController {
         return ResponseEntity.ok(principal);
     }
 
-    @PreAuthorize("hasAuthority('user:read:any')")
+    @PreAuthorize("hasAuthority('user:read:own')")
     @GetMapping("/api/account")
-    public ResponseEntity<AccountResponse> getAccount(@AuthenticationPrincipal AccountPrincipal principal){
+    public ResponseEntity<AccountResponse> getOwnAccount(@AuthenticationPrincipal AccountPrincipal principal){
         return ResponseEntity.ok(AccountMapper.toAccountResponse(accountService.findAccount(principal.id())));
     }
 
-    @PreAuthorize("hasAuthority('user:update:any')")
+    @PreAuthorize("hasAuthority('user:update:own')")
     @PatchMapping("/api/profile")
     public ResponseEntity<AccountResponse> patchProfile(@AuthenticationPrincipal AccountPrincipal principal, @RequestBody PatchProfileRequest patchProfileRequest){
         return ResponseEntity.ok(accountService.updateProfile(principal.id(), patchProfileRequest));

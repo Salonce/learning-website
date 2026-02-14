@@ -29,7 +29,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseBySlug(slug));
     }
 
-    @PreAuthorize("hasAuthority('course:read')")
+    @PreAuthorize("permitAll()")
     @GetMapping("/api/courses/{id}")
     public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id){
         return ResponseEntity.ok(courseService.getCourseResponseById(id));

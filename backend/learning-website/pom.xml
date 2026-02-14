@@ -9,10 +9,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>salonce.dev</groupId>
-	<artifactId>website</artifactId>
+	<artifactId>learning-website</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>website</name>
-	<description>website</description>
+	<name>learning-website</name>
+	<description>learning-website</description>
 	<url/>
 	<licenses>
 		<license/>

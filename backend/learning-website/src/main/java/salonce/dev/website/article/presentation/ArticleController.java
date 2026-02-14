@@ -18,7 +18,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @PreAuthorize("hasAuthority('article:read')")
+    @PreAuthorize("permitAll()")
     @GetMapping("/api/articles/{id}")
     public ResponseEntity<ArticleViewResponse> getArticleResponse(@AuthenticationPrincipal AccountPrincipal principal, @PathVariable Long id){
         return ResponseEntity.ok(articleService.getArticle(id));

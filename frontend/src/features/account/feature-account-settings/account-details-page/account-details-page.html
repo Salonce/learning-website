@@ -2,7 +2,7 @@
   @if (account) {
     <div class="bg-white shadow-lg rounded-2xl p-8 text-center">
 
-      <!-- Name field -->
+      <!-- Name field (editable) -->
       <div class="mb-4 text-left">
         <h3 class="text-lg font-semibold text-gray-800">Name</h3>
         <div class="flex items-center gap-2 mt-1">
@@ -24,25 +24,11 @@
         </div>
       </div>
 
-      <!-- Email field -->
+      <!-- Email field (read-only) -->
       <div class="mb-4 text-left">
         <h3 class="text-lg font-semibold text-gray-800">Email</h3>
         <div class="flex items-center gap-2 mt-1">
-          @if (!editingFields.email) {
-            <span class="flex-1">{{ account.email }}</span>
-          } @else {
-            <input
-              type="text"
-              [(ngModel)]="draftAccount.email"
-              class="border border-gray-300 rounded-lg px-2 py-1 flex-1 text-left"
-            />
-          }
-          <button
-            (click)="editingFields.email ? saveField('email') : toggleEdit('email', true)"
-            class="bg-amber-300 text-gray-800 px-3 py-1 rounded-xl font-medium hover:bg-amber-400 transition"
-          >
-            {{ editingFields.email ? 'Save' : 'Edit' }}
-          </button>
+          <span class="flex-1 text-gray-600">{{ account.email }}</span>
         </div>
       </div>
 

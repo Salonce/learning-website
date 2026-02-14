@@ -15,9 +15,9 @@ export class AccountDetailsPage implements OnInit {
   account: Account | null = null;
   draftAccount: Partial<Account> = {};
   
+  // Only track editing for name now
   editingFields: { [key in keyof Partial<Account>]: boolean } = {
-    name: false,
-    email: false,
+    name: false
   };
 
   constructor(private accountService: AccountService) {}

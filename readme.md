@@ -26,19 +26,13 @@ A course-structured learning website with dynamically added content in the dashb
 
 
 
-## Architecture
+## Global Architecture
 
 High-level structure of the system:
 
-
-
 - SPA frontend communicating with a REST API
 
-- Authentication via OAuth2
-
-- Database schema with relational models (hibernate)
-
-
+- Session-based authentication via OAuth2
 
 ## Backend architecture 
 
@@ -46,21 +40,19 @@ The backend follows Domain-Driven Design principles:
 
 
 
-- Clear separation of **domain**, **application**, and **infrastructure** layers  
+- **domain**, **application**, **infrastructure** and **presentation** layers  
 
-- Business logic encapsulated in **domain services and aggregates**  
+- Business logic encapsulated in **domain aggregates and services**  
 
-- Use-case–oriented application services
-
-
+- Database schema with relational models (hibernate)
 
 ## Frontend Architecture
 
-Modular Angular project following Nx-like structure:
+Modular Angular project following Nx-like structure, aiming for scalability:
 
- - **Feature-based**
+ - **Feature-based**, attempting modular built and separation
 
- - **Shared modules** for reusable components, pipes, and services
+ - **Shared modules** for reusable components and services
 
  - **Core module** for global services (Auth)
 
@@ -71,32 +63,28 @@ Modular Angular project following Nx-like structure:
 ## Engineering Decisions
 
 
-- Database interactions in admin dashboard for content modiciation instead of hardcoding
+- Dynamic content in the dashboard via database-driven API instead of hardcoding
 
-- Designed courses structure hierarchically in the database with bounded context separations
+- Hierarchical course structure in the database to support nested topics and dynamic navigation
 
-- Used **session based auth** for protection instead of JWT to simplify security
+- **Session-based authentication** instead of JWT to simplify CSRF protection and server-side session invalidation
 
-- Implemented **double submit cookie pattern** for CSRF in SPA context  
+- **Double submit cookie pattern** for CSRF in SPA context  
 
 - Separated **PostgreSQL (prod)** and **H2 (dev)** for faster local development  
 
 
 ## Error Handling
 
-- Custom domain exceptions for business rule violations  
+- Exception handlers (`@RestControllerAdvice`) mapping errors to structured HTTP responses  
 
-- Global exception handler (`@ControllerAdvice`) mapping errors to structured HTTP responses  
-
-- Validation errors returned with consistent error format for the SPA
-
-
+- Validation errors returned with consistent error format
 
 ## Challenges & Solutions
 
 **Problem:** Keeping navbar navigation and content dynamic instead of hardcoded  
 
-**Solution:** Introduced a structured REST API for data retrieval  
+**Solution:** Introduced a structured REST API for data management  
 
-**Result:** Navigation updates automatically when courses change
+**Result:** Dashboard content modification
 

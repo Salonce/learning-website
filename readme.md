@@ -8,7 +8,7 @@
 
 ## Overview
 
-A course-structured learning website with dynamically added content in the dashboard, supporting hierarchical courses and rich-text lessons.
+A course-structured learning website with dynamically added content in the dashboard, supporting hierarchical courses, **modular content blocks**, and rich-text lessons. Features **role-based permissions** for controlling access to content editing and management.
 
 
 
@@ -66,6 +66,10 @@ Modular Angular project following Nx-like structure, aiming for scalability:
 - Dynamic content in the dashboard via database-driven API instead of hardcoding
 
 - Hierarchical course structure in the database to support nested topics and dynamic navigation
+
+- Modular **content blocks** for lessons, quizzes, and media
+
+- **Role-based permissions** controlling which users can edit or view certain content
 
 - **Session-based authentication** instead of JWT to simplify CSRF protection and server-side session invalidation
 
